@@ -1,0 +1,14 @@
+{
+  "scenario_id": "no_authorization",
+  "name": "No planning permission",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {
+    "planning_authorization": {
+      "status": "DISABLED"
+    }
+  },
+  "overrides": [],
+  "description": "BLOCKED",
+  "expected": "BLOCKED"
+}

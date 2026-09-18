@@ -1,0 +1,18 @@
+{
+  "scenario_id": "no_engineer",
+  "name": "No task-authorized FRA engineer",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {},
+  "overrides": [
+    {
+      "table": "authorizations",
+      "key": "AUTH-FRA-01",
+      "values": {
+        "valid_to": "2026-09-01T00:00:00Z"
+      }
+    }
+  ],
+  "description": "BLOCKED_EVIDENCE",
+  "expected": "BLOCKED_EVIDENCE"
+}

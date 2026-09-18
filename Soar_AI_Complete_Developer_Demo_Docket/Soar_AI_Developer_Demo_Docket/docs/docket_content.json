@@ -1,0 +1,1044 @@
+[
+  {
+    "title": "Aircraft recovery before arrival",
+    "kicker": "SOAR.AI / SOVEREIGN SLM LABS",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "Complete developer demo docket | Version 1.0 | 14 September 2026"
+      },
+      {
+        "type": "p",
+        "text": "Build a ground-based, private AI workspace that receives an aircraft maintenance event while the aircraft is airborne, assembles the ground team's evidence and resources, and presents preparation options for human approval. No SLM is installed onboard. No AI action changes aircraft systems or makes a flight-safety, dispatch or maintenance-release decision."
+      },
+      {
+        "type": "h",
+        "text": "What is in the package"
+      },
+      {
+        "type": "p",
+        "text": "A runnable FastAPI application and offline web interface; a prebuilt SQLite database; SQL schema and seed exports; 23 CSV seed tables; 16 fictional knowledge documents in PDF and Markdown; 47 retrieval chunks; 12 scenarios; source references; JSON schemas and OpenAPI; local-model prompts and adapters; automated tests; and a presenter runbook."
+      },
+      {
+        "type": "h",
+        "text": "Two explicitly different execution modes"
+      },
+      {
+        "type": "p",
+        "text": "REFERENCE runs a deterministic, repeatable workflow without model inference. Use it to establish data, rules and UI behavior. LIVE LOCAL SLM calls a separately installed Ollama model to formulate searches and draft an evidence-cited briefing. The same deterministic rules and approval gate remain in control. The screen must never present reference replay as a live AI result."
+      },
+      {
+        "type": "note",
+        "text": "All airline operational records, fault codes, parts, authorizations, documents, logistics quotes and outcomes are fictional. The public route and airport reference facts are separately identified. This is not an OEM manual, an approved airline procedure, a real Emirates incident or a production-ready aviation system."
+      },
+      {
+        "type": "h",
+        "text": "Start here"
+      },
+      {
+        "type": "p",
+        "text": "Extract the ZIP; open START_HERE.md; run the reference workflow; review examples/nominal_case_export.json; then configure the local model and execute the evaluation checklist. This PDF explains the decisions and expected behavior. The source files and machine-readable contracts are the implementation authority."
+      }
+    ]
+  },
+  {
+    "title": "Scenario, people and time conventions",
+    "kicker": "01 / BUSINESS SCENARIO",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "Simulation Airways (SIM-AIR) operates fictional aircraft AC-001, display tail A6-SLM, A350-900 configuration CAB-C01. SIM043/SIM044 use the publicly listed EK43/EK44 route and time pattern as an anchor. Emirates lists Airbus 350 on that route page; no actual same-tail allocation or dated incident is asserted. [S02]"
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Moment on 14 September",
+          "UTC stored in data",
+          "Frankfurt display"
+        ],
+        "rows": [
+          [
+            "Ground event received",
+            "06:05:05Z",
+            "08:05:05 CEST"
+          ],
+          [
+            "MCC preparation permission issued",
+            "06:06:00Z",
+            "08:06 CEST"
+          ],
+          [
+            "Initial case / analysis clock",
+            "06:15:00Z",
+            "08:15 CEST"
+          ],
+          [
+            "Pre-arrival demonstration moment",
+            "06:30:00Z",
+            "08:30 CEST"
+          ],
+          [
+            "Estimated touchdown (assumption)",
+            "06:40:00Z",
+            "08:40 CEST"
+          ],
+          [
+            "Arrival at stand / in-block",
+            "06:50:00Z",
+            "08:50 CEST"
+          ],
+          [
+            "Illustrative physical work completed",
+            "07:35:00Z",
+            "09:35 CEST"
+          ],
+          [
+            "Next scheduled off-block departure",
+            "09:00:00Z",
+            "11:00 CEST"
+          ]
+        ],
+        "widths": [
+          2.75,
+          1.65,
+          2.1
+        ]
+      },
+      {
+        "type": "p",
+        "text": "The scheduled stand-to-departure window is 130 minutes. Touchdown and arrival at stand are deliberately distinct; the ten-minute taxi assumption is synthetic. At 08:30 the aircraft is still airborne, ten minutes from the assumed touchdown and twenty minutes from stand arrival. The application stores UTC with a Z suffix; Frankfurt uses Europe/Berlin and Dubai Asia/Dubai. [S14]"
+      },
+      {
+        "type": "h",
+        "text": "The event is a symptom, not a diagnosis"
+      },
+      {
+        "type": "p",
+        "text": "DEMO-A350-21-047 represents an intermittent cabin-zone temperature indication. It is an invented maintenance event, not an Airbus ECAM code. A similar recorded symptom 42 days earlier is useful context, not proof of the same root cause. Crew operational status and ground-preparation permission are supplied by the simulated airline source, never inferred by the SLM."
+      }
+    ]
+  },
+  {
+    "title": "Frame-by-frame story: event to evidence",
+    "kicker": "02 / PRESENTER AND UI CONTRACT",
+    "blocks": [
+      {
+        "type": "table",
+        "headers": [
+          "Frame",
+          "What to show and do",
+          "Expected behavior / presenter line"
+        ],
+        "rows": [
+          [
+            "1. Establish the rotation",
+            "Open the workspace. Show DXB-FRA-DXB and the 11:00 next departure. Explain that the airline and incident are fictional.",
+            "\"We are preparing the ground response, not controlling this aircraft.\""
+          ],
+          [
+            "2. Receive an airborne event",
+            "As SIMULATOR, load nominal. Show the event timestamp, destination, source and reported symptom.",
+            "Case CREATED. The physical fault has not been diagnosed by the model."
+          ],
+          [
+            "3. Apply the authority boundary",
+            "Inspect the supplied authorization: ENABLED, GROUND_PREPARATION_ONLY, expires 07:00Z.",
+            "\"Maintenance Control permits preparation. Flight safety stays outside this workspace.\""
+          ],
+          [
+            "4. Assemble relevant evidence",
+            "Select MCC and run Prepare recovery plan. Reference mode is visibly marked; live mode performs the configured local model calls.",
+            "History includes HIST-0042. Retrieve applicable current documents; exclude wrong type, configuration, tenant, future and untrusted content."
+          ],
+          [
+            "5. Check the ground resources",
+            "Show FRA physical stock 1 but usable stock 0; AMS usable 1; eligible FRA engineer and tool; expired and wrong-type alternatives.",
+            "\"A database count is not the same as an available, usable component or an authorized person.\""
+          ]
+        ],
+        "widths": [
+          0.95,
+          2.9,
+          2.65
+        ]
+      },
+      {
+        "type": "p",
+        "text": "The supplied UI is a single operations workspace, not ten separate pages or a cinematic animation. These frames are the presenter's sequence across that workspace. The tool list is a record of completed bounded reads, not a fabricated stream of autonomous thought."
+      }
+    ]
+  },
+  {
+    "title": "Frame-by-frame story: choice to completion",
+    "kicker": "03 / PRESENTER AND UI CONTRACT",
+    "blocks": [
+      {
+        "type": "table",
+        "headers": [
+          "Frame",
+          "What to show and do",
+          "Expected behavior / presenter line"
+        ],
+        "rows": [
+          [
+            "6. Compare options",
+            "Show A: conditional local resolution. B: dispatch-review evidence only. C: component movement contingency. D: no uncommitted compatible spare.",
+            "A meets the illustrative schedule if its physical assumptions hold. C does not: AMS part ready at FRA 12:20 CEST. B is never a flight permission."
+          ],
+          [
+            "7. Approve preparation",
+            "As MCC, click Approve preparation before the plan expires.",
+            "One approval, one reversible component hold, and three simulated outbox records. No real notification, shipment or work-order integration occurs."
+          ],
+          [
+            "8. Aircraft remains airborne",
+            "Switch to SIMULATOR; advance to 08:30 CEST. Show AIRBORNE, 20 minutes to stand, prepared evidence and held contingency.",
+            "\"The aircraft has not arrived, but the ground team has its preparation package.\""
+          ],
+          [
+            "9. Arrive and validate physically",
+            "As SIMULATOR, click Arrive at stand: 08:50 CEST.",
+            "State ON_STAND. Authorized personnel perform physical work outside this application. No actual procedure is generated here."
+          ],
+          [
+            "10. Record the external outcome",
+            "As SIMULATOR, record external completion at 09:35 CEST; export evidence JSON.",
+            "State CLOSED; unused hold released. Status came from an external-system fixture, not from the model."
+          ]
+        ],
+        "widths": [
+          0.95,
+          2.9,
+          2.65
+        ]
+      },
+      {
+        "type": "h",
+        "text": "Do not claim an unmeasured benefit"
+      },
+      {
+        "type": "p",
+        "text": "The nominal scenario demonstrates pre-arrival information assembly and preparation. It does not measure airline ground-time savings or additional flight hours. Existing aircraft-health platforms already support pre-arrival maintenance activities. Any incremental benefit must be measured against the airline's actual existing workflow, not an invented baseline where every team waits until landing. [S01]"
+      }
+    ]
+  },
+  {
+    "title": "Architecture and trust boundaries",
+    "kicker": "04 / TECHNICAL DESIGN",
+    "blocks": [
+      {
+        "type": "code",
+        "text": "AIRCRAFT: existing systems + flight crew\n    | existing aircraft/airline event communication\n    v\nGROUND: OEM/airline health platform + MCC\n    | trusted adapter supplies preparation authorization\n    v\nPRIVATE AIRLINE ENVIRONMENT\n  Intake validation -> bounded recovery workflow\n       | local SLM: search planning + cited briefing\n       | retrieval: current authorized knowledge\n       | APIs/SQL adapters: history, parts, staff, flights\n       | rules: eligibility, timing, options, permissions\n    v\nHUMAN: review -> APPROVE PREPARATION\n    | validated, reversible demo writes only\n    v\nDRAFT WORK PACKAGE / SIMULATED OUTBOX / PART HOLD\n\nNo return path to flight controls or cockpit decisions."
+      },
+      {
+        "type": "p",
+        "text": "The starter uses one FastAPI service, SQLite with FTS5, static HTML/CSS/JavaScript, and an optional local Ollama endpoint. These are deliberately small deployment boundaries for a demonstration. SQLite tables simulate independent airline systems; they do not mean a real airline stores all operations in one database."
+      },
+      {
+        "type": "p",
+        "text": "The optional MCP wrapper exposes read-only views over the same local REST service. It does not replace server-side permissions and is not invoked by the supplied UI. Production may replace local adapters with AMOS/TRAX/ERP/OCC or OEM interfaces after the airline supplies supported contracts, credentials and licenses. No such integration is included or claimed."
+      },
+      {
+        "type": "note",
+        "text": "The ground authorization field is this application's workflow contract, not an aircraft certification standard or a universal aircraft-health field. A real deployment must obtain its value through the airline's approved human/process controls."
+      }
+    ]
+  },
+  {
+    "title": "Implementation map and data movement",
+    "kicker": "05 / CODE WALKTHROUGH",
+    "blocks": [
+      {
+        "type": "table",
+        "headers": [
+          "File / directory",
+          "Responsibility"
+        ],
+        "rows": [
+          [
+            "app/main.py",
+            "REST endpoints, role checks, case versioning, approvals, simulator controls, audit and document downloads."
+          ],
+          [
+            "app/schemas.py",
+            "Strict event and request validation; structured local-model output schemas."
+          ],
+          [
+            "app/engine.py",
+            "Bounded evidence assembly and deterministic resource/timing calculations."
+          ],
+          [
+            "app/retrieval.py",
+            "Operator/type/configuration/effectivity/trust filtering, FTS5 search, optional local-vector rank fusion."
+          ],
+          [
+            "app/model.py + prompts/",
+            "Local-only Ollama calls; search planning and cited draft explanations; explicit errors instead of silent replay."
+          ],
+          [
+            "app/db.py + database/",
+            "SQLite connection, deterministic seeding, hash-chain audit and SQL schema."
+          ],
+          [
+            "app/static/",
+            "Offline operations UI. No map tiles, font service, public model or CDN dependency."
+          ],
+          [
+            "scripts/ + tests/",
+            "Rebuild, validate, export contracts, run the scenario, build local embeddings, test constraints."
+          ]
+        ],
+        "widths": [
+          2.5,
+          4.0
+        ]
+      },
+      {
+        "type": "h",
+        "text": "One analysis request"
+      },
+      {
+        "type": "p",
+        "text": "Validate the event and current MCC permission. Resolve the aircraft and rotations. In live mode ask the local model for up to three search phrases. Read applicable evidence, history, stock, authorizations, tooling and transport quotes. Calculate recovery options in Python. In live mode request a schema-constrained briefing with supplied evidence identifiers. Persist the complete plan and its hash, increment the case version, and await approval."
+      },
+      {
+        "type": "h",
+        "text": "One approval request"
+      },
+      {
+        "type": "p",
+        "text": "Validate role, case version, plan hash, permission and plan expiry. Recompute resource constraints inside a transaction and check the originally cited documents remain applicable. Create a single idempotent approval and, where available, a reversible stock hold. Store three simulated outbox items. Nothing sends email, books a courier or releases an aircraft."
+      }
+    ]
+  },
+  {
+    "title": "Database and file inventory",
+    "kicker": "06 / INCLUDED DATA",
+    "blocks": [
+      {
+        "type": "table",
+        "headers": [
+          "Dataset group",
+          "Rows",
+          "Purpose"
+        ],
+        "rows": [
+          [
+            "airports / sources",
+            "12 / 14",
+            "Public airport facts and source register"
+          ],
+          [
+            "operators / aircraft",
+            "2 / 12",
+            "Fictional operators and mixed-fleet masters"
+          ],
+          [
+            "parts / part_effectivity",
+            "16 / 16",
+            "Catalog, configuration applicability and validity"
+          ],
+          [
+            "fault_catalog / task_requirements",
+            "6 / 6",
+            "Fictional symptom families and planning durations"
+          ],
+          [
+            "providers / inventory_lots",
+            "24 / 126",
+            "MRO/logistics placeholders and inventory states"
+          ],
+          [
+            "engineers / authorizations / shifts",
+            "48 / 48 / 144",
+            "Named demo resources, validity and work windows"
+          ],
+          [
+            "tool_assets",
+            "36",
+            "Serviceability, calibration and availability"
+          ],
+          [
+            "flights / fleet_status",
+            "156 / 11",
+            "Seven-day rotations and allocated/inbound tails"
+          ],
+          [
+            "defects / work_orders",
+            "300 / 300",
+            "Historical cases and linked work records"
+          ],
+          [
+            "open_deferrals / logistics_quotes",
+            "6 / 5",
+            "Review dependencies and synthetic movement quotes"
+          ],
+          [
+            "communications",
+            "5",
+            "Four contextual messages plus an untrusted test"
+          ],
+          [
+            "documents / doc_chunks",
+            "16 / 47",
+            "PDF/Markdown metadata and stable section chunks"
+          ]
+        ],
+        "widths": [
+          2.7,
+          1.05,
+          2.75
+        ]
+      },
+      {
+        "type": "p",
+        "text": "Total: 23 seed tables and 1,356 seed rows, excluding empty runtime tables and the derived FTS index. The database also includes cases, approvals, reservations, outbox, audit and optional embeddings. All table columns, keys, types, nullability and domains are described in docs/DATA_DICTIONARY.md and data/data_dictionary.csv."
+      },
+      {
+        "type": "p",
+        "text": "database/seed.sqlite is ready to inspect. Rebuild through scripts/seed_db.py, which applies schema.sql and imports data/seed/*.csv in foreign-key order. The SQL dump is SQLite-specific; this is not a tested PostgreSQL migration."
+      }
+    ]
+  },
+  {
+    "title": "Realism, provenance and data editing",
+    "kicker": "07 / DATA CONTRACT",
+    "blocks": [
+      {
+        "type": "h",
+        "text": "Public reference versus fictional operation"
+      },
+      {
+        "type": "p",
+        "text": "data/public/airports_reference.csv contains identifiers, names and coordinates transcribed from the linked OurAirports airport pages. OurAirports describes its data as public domain and without an accuracy guarantee; the coordinates are illustrative and not for navigation. Time-zone identifiers were explicitly assigned for application display. [S04]"
+      },
+      {
+        "type": "p",
+        "text": "data/public/route_reference.json preserves the published EK43/EK44 route-page snapshot and its source. Every application flight is still labelled synthetic because tail allocation, operating day and recovery assumptions are not verified airline records. No full airline, OEM or regulatory document is redistributed. [S02]"
+      },
+      {
+        "type": "h",
+        "text": "Curated complexity, rather than arbitrary large files"
+      },
+      {
+        "type": "p",
+        "text": "The hero inventory includes quarantined FRA stock, serviceable pooled AMS stock, spare CDG/DXB stock and unusable VIE/LHR alternatives. Historical cases cover a selected A350 CAB-C01 subfleet. Other aircraft, configurations and tenants provide distractors. Staff records distinguish aircraft familiarity from a valid operator/task authorization. A parked or inbound aircraft is not treated as a free spare."
+      },
+      {
+        "type": "h",
+        "text": "Safe ways to change the story"
+      },
+      {
+        "type": "p",
+        "text": "For a new scenario, copy a JSON file in data/scenarios, patch the event or apply whitelisted row overrides, then reseed and rerun tests. For a new master record, preserve primary/foreign keys and edit the CSV or generator. For a document edit, update its metadata, chunks, Markdown hash and PDF together. Regenerate the FTS and optional embeddings; never silently reuse an index from a different corpus."
+      },
+      {
+        "type": "note",
+        "text": "A scenario load deletes and recreates the isolated demo database. It is intentionally destructive and single-user. Never point this application at a production database, real inventory or an operational airline account."
+      }
+    ]
+  },
+  {
+    "title": "Knowledge, retrieval and citation behavior",
+    "kicker": "08 / RAG DESIGN",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "The included knowledge documents are original planning fixtures, not copies of an AMM, TSM/FIM or operator MEL. They describe information and resource preparation without reset instructions, measurements, wiring, troubleshooting actions or flight restrictions. SIM-MEL-21-R2 is explicitly a review checklist and supplies no dispatch permission."
+      },
+      {
+        "type": "h",
+        "text": "Eligibility before similarity"
+      },
+      {
+        "type": "p",
+        "text": "Only current ACTIVE, TRUSTED documents matching operator, aircraft type, configuration and station (or ALL where allowed) can enter the prompt. valid_from is inclusive and valid_to exclusive. Relevant retired, future-effective, wrong-type, wrong-configuration and other-operator documents are seeded to test this exclusion. An untrusted document contains an intentional instruction-injection canary and must not appear in retrieval output."
+      },
+      {
+        "type": "h",
+        "text": "Baseline and optional semantic path"
+      },
+      {
+        "type": "p",
+        "text": "The default uses SQLite FTS5 keyword search and metadata filters. It is not represented as semantic RAG. ENABLE_SEMANTIC=1 adds locally generated embeddings and reciprocal-rank fusion only if an index exists for the configured embedding model and current corpus hash. The returned retrieval_mode records which path actually ran. Index all 47 chunks locally, but filter access and applicability before exposing results."
+      },
+      {
+        "type": "h",
+        "text": "Evidence contract"
+      },
+      {
+        "type": "p",
+        "text": "Each returned chunk includes a stable chunk_id, doc_id, revision, section, page and Markdown-content hash. The supplied PDFs are one-page fixtures so page=1 is exact. Model claims must reference identifiers supplied in the evidence envelope. Identifier validation prevents fabricated references but does not establish that the prose is true: a human reviewer must verify claim-to-evidence meaning. [S06]"
+      },
+      {
+        "type": "p",
+        "text": "Required PLANNING and DISPATCH_REVIEW evidence is checked independently of search ranking. Current relevant evidence cannot be displaced merely because another text has a higher semantic score. Missing required evidence blocks approval instead of producing an invented technical answer."
+      }
+    ]
+  },
+  {
+    "title": "Deterministic rules and option calculations",
+    "kicker": "09 / EXPECTED NUMBERS",
+    "blocks": [
+      {
+        "type": "h",
+        "text": "Stock, people and tools"
+      },
+      {
+        "type": "p",
+        "text": "Usable stock requires a matching part/configuration/operator effectivity record, SERVICEABLE condition, VERIFIED release-document status, unexpired lot, permitted ownership/pooling, current snapshot and unreserved quantity. Staff require the correct operator, type, configuration, task, station, validity and full shift window. Tools require serviceability, current calibration and a usable availability window. Thirty-minute snapshot limits are fixture policy, not an aviation standard."
+      },
+      {
+        "type": "h",
+        "text": "Option A: conditional local resolution"
+      },
+      {
+        "type": "code",
+        "text": "Start = max(in-block + 5 min, engineer free, tool free)\n      = 06:55Z\nWork = 15 inspection + 10 resolution + 10 verification\n       + 5 recording = 40 min\nMaintenance ready = 07:35Z\nDeparture = max(scheduled out,\n  max(maintenance ready, other-turnaround ready) + 20 min)\n          = max(09:00Z, max(07:35Z,08:40Z)+20 min)\n          = 09:00Z; simulated delay = 0 min"
+      },
+      {
+        "type": "h",
+        "text": "Option C: feasible contingency, but late"
+      },
+      {
+        "type": "p",
+        "text": "At 06:15Z the AMS item can be staged by 06:45Z, before the synthetic 07:10Z tender cutoff. The quote departs 08:10Z, arrives 09:20Z and requires 60 minutes destination handling. Part available at FRA: 10:20Z (12:20 CEST). A 75-minute complete replacement work package plus the 20-minute departure buffer yields 11:55Z (13:55 CEST), 175 minutes after schedule. Every duration and quote is an assumption, not an airline benchmark."
+      },
+      {
+        "type": "p",
+        "text": "Option B provides an evidence checklist only: dispatch_eligibility remains UNKNOWN and no departure time is calculated. Option D reports no uncommitted compatible spare. The model cannot overwrite these calculated fields. Crew/slot flags and broader network constraints require a separate authorized OCC review, not an SLM conclusion."
+      }
+    ]
+  },
+  {
+    "title": "API contracts, identities and approvals",
+    "kicker": "10 / INTEGRATION CONTRACT",
+    "blocks": [
+      {
+        "type": "table",
+        "headers": [
+          "Action",
+          "HTTP endpoint suffix",
+          "Authorized persona"
+        ],
+        "rows": [
+          [
+            "Load/reset a scenario",
+            "POST /api/demo/load",
+            "SIMULATOR"
+          ],
+          [
+            "Receive an event",
+            "POST /api/events",
+            "SIMULATOR"
+          ],
+          [
+            "Read a case",
+            "GET /api/cases/{id}",
+            "Any demo persona"
+          ],
+          [
+            "Prepare the plan",
+            "POST /api/cases/{id}/analyze",
+            "MCC"
+          ],
+          [
+            "Approve preparation",
+            "POST /api/cases/{id}/approve-preparation",
+            "MCC"
+          ],
+          [
+            "Revoke / report changed operation",
+            "POST /api/cases/{id}/update",
+            "SIMULATOR"
+          ],
+          [
+            "Advance / record external result",
+            "POST .../advance-clock; .../external-outcome",
+            "SIMULATOR"
+          ],
+          [
+            "Export the evidence/audit",
+            "GET /api/cases/{id}/export",
+            "Any demo persona"
+          ]
+        ],
+        "widths": [
+          1.8,
+          3.35,
+          1.35
+        ]
+      },
+      {
+        "type": "p",
+        "text": "schemas/openapi.json is exported from the application, not separately handwritten. Nine JSON schemas describe the event, authorization, requests and model response. Unknown request fields are rejected. Model output cannot include a new dispatch status because its schema restricts that field to UNKNOWN. Source event IDs and increasing sequence numbers support deduplication and invalidation."
+      },
+      {
+        "type": "h",
+        "text": "Approval payload"
+      },
+      {
+        "type": "code",
+        "text": "{\n  \"case_version\": <version returned by analysis>,\n  \"plan_hash\": \"<64-character returned SHA-256>\",\n  \"idempotency_key\": \"<new stable request identifier>\"\n}"
+      },
+      {
+        "type": "p",
+        "text": "A duplicate effective approval returns the existing result without creating a second hold or message. A revoked or version-invalidated approval cannot be replayed as a new action. HTTP 401 means missing/invalid local token; 403 wrong persona; 409 stale state, hash, time or resource conflict; 422 invalid payload/time; 503 explicit local model failure. No silent change from live inference to reference replay is made."
+      }
+    ]
+  },
+  {
+    "title": "States, failure cases and recovery handling",
+    "kicker": "11 / WORKFLOW CONTRACT",
+    "blocks": [
+      {
+        "type": "code",
+        "text": "CREATED -> AWAITING_APPROVAL -> PREPARATION_APPROVED\n                     |                  |\n                human gate         external arrival\n                                        v\n                                    ON_STAND\n                                        | external completion\n                                        v\n                                      CLOSED\n\nAuthority failure -> BLOCKED\nMissing essential evidence -> BLOCKED_EVIDENCE\nLocal inference error -> MODEL_ERROR\nChanged event/destination/permission -> SUSPENDED"
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Scenario fixture",
+          "Expected behavior"
+        ],
+        "rows": [
+          [
+            "nominal",
+            "Prepare A/B and a reversible AMS contingency; no dispatch approval."
+          ],
+          [
+            "no_authorization / critical_event / expired_authorization",
+            "Block planning using the external flags/permission; no model safety classification."
+          ],
+          [
+            "no_engineer / no_tool / missing_current_document / unknown_fault",
+            "BLOCKED_EVIDENCE; no approval."
+          ],
+          [
+            "stale_inventory",
+            "Reject stale AMS inventory and compare the CDG contingency."
+          ],
+          [
+            "late_cutoff",
+            "Reject AMS air quote when tender cutoff cannot be met."
+          ],
+          [
+            "busy_engineer",
+            "Option A moves onto the critical path; illustrative delay becomes 60 minutes."
+          ],
+          [
+            "no_serviceable_parts",
+            "No invented part contingency; retain conditional inspection preparation."
+          ]
+        ],
+        "widths": [
+          2.7,
+          3.8
+        ]
+      },
+      {
+        "type": "p",
+        "text": "A newer diversion or permission-revocation message invalidates the current plan and releases its holds. The narrow starter does not calculate a fresh Vienna recovery; a real adapter would first update the rotation, local resources and authorization, then create a new ground case. An active flight-safety event blocks this demo branch even though an airline could separately authorize non-flight ground support during emergencies."
+      }
+    ]
+  },
+  {
+    "title": "Install and run the reference demonstration",
+    "kicker": "12 / QUICK START",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "Use Python 3.13 in an isolated environment. SQLite must include FTS5. The supplied browser UI uses no external assets. Package dependencies need to be installed before going offline; model files are optional for reference mode. Run from the extracted package directory."
+      },
+      {
+        "type": "h",
+        "text": "Windows PowerShell"
+      },
+      {
+        "type": "code",
+        "text": "py -3.13 -m venv .venv\n.\\.venv\\Scripts\\python -m pip install -r requirements-dev.txt\n.\\.venv\\Scripts\\python scripts/seed_db.py\n.\\.venv\\Scripts\\python -m uvicorn app.main:app --port 8000"
+      },
+      {
+        "type": "h",
+        "text": "macOS / Linux"
+      },
+      {
+        "type": "code",
+        "text": "python3 -m venv .venv\n.venv/bin/python -m pip install -r requirements-dev.txt\n.venv/bin/python scripts/seed_db.py\n.venv/bin/python -m uvicorn app.main:app --port 8000"
+      },
+      {
+        "type": "p",
+        "text": "Open http://127.0.0.1:8000. Choose SIMULATOR, nominal, Reference replay and Load / reset fixture. Switch to MCC to prepare and approve. Switch back to SIMULATOR to advance time and record the external result. Changing the persona changes the local sample bearer token; the optional token field supports environment overrides."
+      },
+      {
+        "type": "h",
+        "text": "Automated reference run"
+      },
+      {
+        "type": "code",
+        "text": "python scripts/run_nominal.py --mode reference\npython -m pytest -q\npython scripts/validate_data.py"
+      },
+      {
+        "type": "p",
+        "text": "start_demo.sh and start_demo.ps1 are convenience launchers. .env.example is documentation: native Python does not automatically load it. Export variables in the shell; do not assume editing that file changes the process. Dockerfile and compose.yaml are optional deployment scaffolds; the delivered validation used native Python, not Docker."
+      }
+    ]
+  },
+  {
+    "title": "Enable the actual private SLM",
+    "kicker": "13 / MODEL SETUP AND EVALUATION",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "The supplied candidate is qwen3:8b through Ollama. It is a general open-weight model, not an aviation-trained or certified model. The upstream Qwen3-8B model card lists Apache-2.0; review the actual installed artifact and all component licenses. No model weights are bundled. [S10, S11]"
+      },
+      {
+        "type": "h",
+        "text": "Prepare and record the local runtime"
+      },
+      {
+        "type": "code",
+        "text": "# Configure the OLLAMA SERVER process, then restart it:\nOLLAMA_NO_CLOUD=1\n\n# One-time downloads before an offline presentation:\nollama pull qwen3:8b\nollama pull nomic-embed-text  # optional semantic retrieval\n\n# Application process environment:\nOLLAMA_BASE_URL=http://127.0.0.1:11434\nOLLAMA_MODEL=qwen3:8b\nENABLE_SEMANTIC=0\n\npython scripts/model_manifest.py"
+      },
+      {
+        "type": "p",
+        "text": "Use export NAME=value on macOS/Linux or $env:NAME=\"value\" in PowerShell. OLLAMA_NO_CLOUD must apply to the Ollama server itself; setting it only on FastAPI does not reconfigure an already-running server. Endpoint allowlists and that flag do not replace network egress controls or proof of data residency. [S09]"
+      },
+      {
+        "type": "h",
+        "text": "Semantic retrieval is optional and order-sensitive"
+      },
+      {
+        "type": "p",
+        "text": "Load the intended scenario first, then run python scripts/build_embeddings.py. Enable ENABLE_SEMANTIC=1 on the application process and select Live local SLM in the UI. A scenario reset deletes the optional index; rebuild it after each reset. Inspect retrieval_mode rather than assuming vectors were used. The reference path remains lexical."
+      },
+      {
+        "type": "p",
+        "text": "Benchmark the actual model digest, quantization, hardware, prompt and context size. No VRAM, response-time or accuracy guarantee is supplied. Use the included evaluation prompts, inspect citation meaning and test rejected/unknown outputs. The delivery environment did not run a real Ollama model; the adapter contract was tested with mocks and failure tests, not with aircraft-domain model validation."
+      }
+    ]
+  },
+  {
+    "title": "Security, sovereignty and aviation boundaries",
+    "kicker": "14 / CONTROL DESIGN",
+    "blocks": [
+      {
+        "type": "h",
+        "text": "Controls actually implemented"
+      },
+      {
+        "type": "p",
+        "text": "Server-side role checks; strict schemas; operator-scoped cases and evidence; local model endpoint allowlist; prompt/data separation; metadata-filtered retrieval; deterministic option fields; plan hashes, versions and expiry; approval-time revalidation; transactional reversible holds; idempotent writes; event-sequence invalidation; a simulated-only outbox; and a local hash-linked audit trail."
+      },
+      {
+        "type": "h",
+        "text": "What those controls do not prove"
+      },
+      {
+        "type": "p",
+        "text": "The role selector and sample bearer tokens are demonstration fixtures, not SSO or multi-user identity assurance. Database owners can alter the database or replace the audit file; the hash chain is not an immutable compliance archive. Identifier checks do not prove factual entailment. A localhost model URL alone does not guarantee no data leakage through logs, agents, proxies, plugins or updates. This is not certified software or a safety case."
+      },
+      {
+        "type": "h",
+        "text": "Production separation of duty"
+      },
+      {
+        "type": "p",
+        "text": "Use enterprise SSO and short-lived audience-bound tokens, least-privilege service accounts, network isolation, TLS/mTLS as appropriate, secrets management, access-controlled document ingestion, licensed current sources, append-only audit storage, retention controls and an airline-approved incident process. Validate supplier/model licenses and restrict outbound traffic. Remote MCP deployments need their own authorization design; a stdio wrapper is not a secure enterprise gateway. [S13]"
+      },
+      {
+        "type": "h",
+        "text": "Forbidden scope"
+      },
+      {
+        "type": "p",
+        "text": "No continued-flight or diversion advice; no classification of life-threatening conditions; no release-to-service or airworthiness determination; no MEL dispatch authorization; no cockpit command; no actual movement booking; no automatic aircraft swap. The workflow may prepare a review package only after the supplied ground permission is current. MEL material concerns the authorized dispatch review; it is not a substitute for in-flight crew procedures. [S03]"
+      }
+    ]
+  },
+  {
+    "title": "Test strategy and acceptance gates",
+    "kicker": "15 / QUALITY AND COMPLETION",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "The included automated suite validates the reference workflow, API/role boundaries, eligibility logic, transaction conflicts, evidence exclusion, time-zone arithmetic and failure behavior. qa/test_results.xml and qa/test_output.txt record the executed run. qa/data_validation.json checks database/file consistency. qa/http_smoke_test.json records the full reference scenario against a running local HTTP service."
+      },
+      {
+        "type": "h",
+        "text": "Developer definition of done"
+      },
+      {
+        "type": "p",
+        "text": "A new installation runs without editing application source; the seed reconstructs with no foreign-key or integrity errors; the complete nominal flow is reproducible; no denied action is accepted; stale evidence is visibly rejected; only applicable current knowledge is retrieved; quoted logistics and the next departure use the same time basis; reservations are idempotent and reversible; and evidence exports identify the mode actually executed."
+      },
+      {
+        "type": "h",
+        "text": "Before calling it a live SLM demo"
+      },
+      {
+        "type": "p",
+        "text": "Install and freeze the model/runtime artifact, then run real inference on the nominal and adversarial fixtures. Verify every claim against its cited evidence; confirm the model never changes deterministic option fields; record context size and elapsed time; remove any unsupported confidence labels; and demonstrate that no external inference endpoint is contacted. Rehearse with venue-network connectivity disabled after setup. A mocked structured response is not live-model validation."
+      },
+      {
+        "type": "h",
+        "text": "Before an airline pilot deployment"
+      },
+      {
+        "type": "p",
+        "text": "Replace all synthetic knowledge and data only with authorized licensed sources; integrate supported read APIs; define current-data freshness contracts; obtain maintenance and operational safety review; establish human authority and escalation procedures; evaluate hallucination and abstention rates; add durable workflow execution, real identity, observability, disaster recovery and load tests. Conduct a shadow-mode evaluation before enabling any reversible write integration."
+      },
+      {
+        "type": "note",
+        "text": "This handover supplies a tested local reference implementation plus live-model integration code. It does not supply trained model weights, credentials, OEM connectors, an approved MEL, a validated airline knowledge base or an operational release mechanism."
+      }
+    ]
+  },
+  {
+    "title": "Runbook, troubleshooting and handover tasks",
+    "kicker": "16 / DEVELOPER OPERATIONS",
+    "blocks": [
+      {
+        "type": "table",
+        "headers": [
+          "Symptom",
+          "Check / action"
+        ],
+        "rows": [
+          [
+            "401 or 403",
+            "Use the intended persona/token. SIMULATOR ingests/resets/advances; MCC prepares/approves. Tokens changed in environment must also be supplied in the UI override."
+          ],
+          [
+            "409 at approval",
+            "Do not retry a stale hash. Check plan TTL, permission, changed resources, newer event and existing approval. Reload the fixture for a clean demonstration."
+          ],
+          [
+            "503 in live mode",
+            "Verify local Ollama is running, model exists, schema output is valid and endpoint is allowlisted. The app does not silently switch to replay."
+          ],
+          [
+            "Semantic retrieval not shown",
+            "Load first, build embeddings for this DB/model/corpus, then analyze. Resetting a scenario removes embeddings. Check ENABLE_SEMANTIC on the app process."
+          ],
+          [
+            "No current documents / PDF missing",
+            "Run seeding and data validation; verify metadata, hashes and knowledge/pdf paths. Do not work around an applicability failure by removing the filter."
+          ],
+          [
+            "Port occupied / multiple presenters",
+            "Select another port or stop the other demo. Use one process/worker and an isolated runtime DB per presenter; reset is not multi-user safe."
+          ],
+          [
+            "Docker cannot see host model",
+            "Host Ollama normally binds locally. Native setup is the tested recommended path. Any container-accessible binding requires explicit private networking/firewall review."
+          ]
+        ],
+        "widths": [
+          2.15,
+          4.35
+        ]
+      },
+      {
+        "type": "h",
+        "text": "Suggested implementation order"
+      },
+      {
+        "type": "p",
+        "text": "First run the reference workflow and inspect its expected export. Next review the data dictionary and source/provenance boundary. Then enable the local SLM, add the optional index and evaluate outputs. Finally refine presentation/UI transitions without changing control semantics. Replace mock adapters only after an airline partner defines access and safety responsibilities."
+      },
+      {
+        "type": "p",
+        "text": "All fixture changes should be followed by reseeding, contract export, tests and evidence review. Keep public-source facts separate from the scenario assumptions; do not relabel simulation records as an airline case study. Preserve the model manifest and QA results with the exact package version presented."
+      }
+    ]
+  },
+  {
+    "title": "Source register and evidence limits",
+    "kicker": "17 / PUBLIC SOURCES",
+    "blocks": [
+      {
+        "type": "p",
+        "text": "Checked 14 September 2026. The package includes original summaries and small factual reference fields, not copies of full source publications. These sources support context and integration design; none validates the fictional maintenance result or quantifies this prototype's benefit."
+      },
+      {
+        "type": "h",
+        "text": "S01 | Airbus - In-flight health monitoring"
+      },
+      {
+        "type": "p",
+        "text": "Existing pre-arrival maintenance preparation workflow; original paraphrase only. Not a source of airline-specific faults, timings, spares or approved maintenance procedures."
+      },
+      {
+        "type": "url",
+        "text": "https://www.aircraft.airbus.com/en/newsroom/news/2022-07-in-flight-health-monitoring"
+      },
+      {
+        "type": "h",
+        "text": "S02 | Emirates - Dubai-Frankfurt flight schedules"
+      },
+      {
+        "type": "p",
+        "text": "Public route and schedule snapshot: EK43 03:25 DXB / 08:50 FRA; EK44 11:00 FRA / 19:20 DXB; Airbus 350. Date-dependent schedule; same-tail assignment and all incident details are simulated; no endorsement."
+      },
+      {
+        "type": "url",
+        "text": "https://www.emirates.com/de/english/destinations/dxb/fra/flights-from-dubai-to-frankfurt/"
+      },
+      {
+        "type": "h",
+        "text": "S03 | Airbus Safety First - A Recall on the Correct Use of the MEL"
+      },
+      {
+        "type": "p",
+        "text": "General MEL/dispatch boundary and authorized review; no copied procedures. Not the operator MEL; does not authorize dispatch of this fictional defect."
+      },
+      {
+        "type": "url",
+        "text": "https://safetyfirst.airbus.com/a-recall-on-the-correct-use-of-the-mel/"
+      },
+      {
+        "type": "h",
+        "text": "S04 | OurAirports - OurAirports open data"
+      },
+      {
+        "type": "p",
+        "text": "Public-domain airport identifiers, names and coordinates transcribed from linked airport pages. Community-maintained reference; no guarantee of accuracy; not for navigation. Bulk CSV download was not used."
+      },
+      {
+        "type": "url",
+        "text": "https://ourairports.com/data/"
+      },
+      {
+        "type": "h",
+        "text": "S05 | IATA - Four Priorities to Strengthen the Aviation Supply Chain"
+      },
+      {
+        "type": "p",
+        "text": "Problem framing: visibility and integration of maintenance and material information. Industry-level evidence, not a quantified benefit estimate for this demo."
+      },
+      {
+        "type": "url",
+        "text": "https://www.iata.org/en/pressroom/2026-releases/06-24-iata-outlines-four-priorities-to-strengthen-aviation-supply-chain/"
+      },
+      {
+        "type": "h",
+        "text": "S06 | Ollama - Structured Outputs"
+      },
+      {
+        "type": "p",
+        "text": "Local structured JSON response API design. Schema validity is not factual or aviation-safety validity."
+      },
+      {
+        "type": "url",
+        "text": "https://docs.ollama.com/capabilities/structured-outputs"
+      },
+      {
+        "type": "h",
+        "text": "S07 | Ollama - Tool calling"
+      },
+      {
+        "type": "p",
+        "text": "Optional model tool-selection implementation reference. This reference build uses a bounded workflow and schema-constrained search planning, not unrestricted autonomous tools."
+      },
+      {
+        "type": "url",
+        "text": "https://docs.ollama.com/capabilities/tool-calling"
+      }
+    ]
+  },
+  {
+    "title": "Technical references and distribution notes",
+    "kicker": "18 / PUBLIC SOURCES",
+    "blocks": [
+      {
+        "type": "h",
+        "text": "S08 | Ollama - Generate embeddings"
+      },
+      {
+        "type": "p",
+        "text": "Optional local semantic retrieval adapter. Embedding model weights are not bundled; live inference requires local installation."
+      },
+      {
+        "type": "url",
+        "text": "https://docs.ollama.com/api/embed"
+      },
+      {
+        "type": "h",
+        "text": "S09 | Ollama - FAQ / local-only cloud settings"
+      },
+      {
+        "type": "p",
+        "text": "Local inference and OLLAMA_NO_CLOUD=1 deployment setting. Setting alone is not proof of sovereignty: also control egress, credentials, logs and updates."
+      },
+      {
+        "type": "url",
+        "text": "https://docs.ollama.com/faq"
+      },
+      {
+        "type": "h",
+        "text": "S10 | Qwen - Qwen3-8B model card"
+      },
+      {
+        "type": "p",
+        "text": "Candidate open-weight general model; model card lists Apache-2.0. Not aviation-certified or validated for this task; no weights bundled; evaluate installed artifact."
+      },
+      {
+        "type": "url",
+        "text": "https://huggingface.co/Qwen/Qwen3-8B"
+      },
+      {
+        "type": "h",
+        "text": "S11 | Ollama - qwen3:8b model library entry"
+      },
+      {
+        "type": "p",
+        "text": "Concrete optional local model tag. Tags can change; record local model digest and runtime version before presentation."
+      },
+      {
+        "type": "url",
+        "text": "https://ollama.com/library/qwen3:8b"
+      },
+      {
+        "type": "h",
+        "text": "S12 | Model Context Protocol - Build an MCP server"
+      },
+      {
+        "type": "p",
+        "text": "Optional read-only stdio adapter design. Remote enterprise MCP authentication and production gateway are not provided by the local stdio adapter."
+      },
+      {
+        "type": "url",
+        "text": "https://modelcontextprotocol.io/docs/develop/build-server"
+      },
+      {
+        "type": "h",
+        "text": "S13 | Model Context Protocol - Authorization security considerations"
+      },
+      {
+        "type": "p",
+        "text": "Production authorization considerations and token audience isolation. Use the enterprise-approved supported specification and SDK versions at deployment."
+      },
+      {
+        "type": "url",
+        "text": "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/security-considerations"
+      },
+      {
+        "type": "h",
+        "text": "S14 | Python - zoneinfo: IANA time zone support"
+      },
+      {
+        "type": "p",
+        "text": "UTC storage, timezone-aware local display. tzdata package may be needed on Windows; fixture clock is fixed, not live."
+      },
+      {
+        "type": "url",
+        "text": "https://docs.python.org/3/library/zoneinfo.html"
+      },
+      {
+        "type": "p",
+        "text": "Airline names and aircraft types identify the public operating-pattern reference only. No logo, endorsement or confidential manual is included. OurAirports reference values are public-domain data with their stated caveat. Model, SDK and framework licenses remain with their respective projects. Original demo code and fixtures may be adapted for this demonstration; complete third-party license review before any redistribution or production deployment."
+      }
+    ]
+  }
+]

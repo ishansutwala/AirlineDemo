@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "event_id": "EVT-20260914-0001",
+  "source_system": "SIMULATED_MCC_ADAPTER",
+  "source_sequence": 1,
+  "operator_id": "SIM-AIR",
+  "aircraft_id": "AC-001",
+  "flight_id": "FLT-043",
+  "next_flight_id": "FLT-044",
+  "destination": "FRA",
+  "occurred_at": "2026-09-14T06:05:00Z",
+  "received_at": "2026-09-14T06:05:05Z",
+  "fault_code": "DEMO-A350-21-047",
+  "reported_symptom": "Intermittent cabin-zone temperature indication reported. Crew narrative supplied for ground planning only.",
+  "crew_operational_status": "CONTINUING_TO_PLANNED_DESTINATION_REPORTED_EXTERNALLY",
+  "planning_authorization": {
+    "status": "ENABLED",
+    "issued_by": "SIM-MCC-CTRL-01",
+    "issued_at": "2026-09-14T06:06:00Z",
+    "expires_at": "2026-09-14T07:00:00Z",
+    "scope": "GROUND_PREPARATION_ONLY"
+  },
+  "safety_event_active": false,
+  "data_class": "SYNTHETIC",
+  "note": "No claim that this event occurred at Emirates; no ECAM warning or OEM fault-code mapping."
+}

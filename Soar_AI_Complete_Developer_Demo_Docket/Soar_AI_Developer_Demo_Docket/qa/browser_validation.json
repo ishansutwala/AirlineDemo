@@ -1,0 +1,15 @@
+{
+  "status": "PASS_OFFLINE_RENDER",
+  "browser": "Chromium / Playwright",
+  "checks": [
+    "HTML and JS rendered with actual TestClient response",
+    "permission and source panel present",
+    "prearrival AIRBORNE and 20 minutes to stand",
+    "zero JavaScript rendering errors"
+  ],
+  "limitations": [
+    "Browser navigation to localhost is blocked by this environment administrator.",
+    "This check used offline HTML/JS and real local TestClient response objects; it is not a browser-to-server end-to-end navigation test.",
+    "A separate HTTPX/Uvicorn smoke test exercised the server over HTTP."
+  ]
+}

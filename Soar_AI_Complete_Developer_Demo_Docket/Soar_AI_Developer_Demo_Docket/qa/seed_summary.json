@@ -1,0 +1,30 @@
+{
+  "database": "database/seed.sqlite",
+  "scenario": "nominal",
+  "seed_rows": 1356,
+  "tables": {
+    "sources": 14,
+    "airports": 12,
+    "operators": 2,
+    "aircraft": 12,
+    "parts": 16,
+    "part_effectivity": 16,
+    "fault_catalog": 6,
+    "providers": 24,
+    "inventory_lots": 126,
+    "engineers": 48,
+    "authorizations": 48,
+    "engineer_shifts": 144,
+    "tool_assets": 36,
+    "task_requirements": 6,
+    "flights": 156,
+    "defects": 300,
+    "work_orders": 300,
+    "open_deferrals": 6,
+    "logistics_quotes": 5,
+    "fleet_status": 11,
+    "communications": 5,
+    "documents": 16,
+    "doc_chunks": 47
+  }
+}

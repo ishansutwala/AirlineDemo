@@ -1,0 +1,16 @@
+erDiagram
+  operators ||--o{ aircraft : owns
+  aircraft ||--o{ flights : operates
+  aircraft ||--o{ defects : history
+  defects ||--|| work_orders : records
+  parts ||--o{ inventory_lots : stocked_as
+  parts ||--o{ part_effectivity : applicable_to
+  fault_catalog }o--|| parts : contingency_candidate
+  engineers ||--o{ authorizations : holds
+  engineers ||--o{ engineer_shifts : scheduled
+  documents ||--o{ doc_chunks : contains
+  doc_chunks ||--o| embeddings : optional_index
+  aircraft ||--o{ cases : ground_preparation
+  cases ||--o{ approvals : human_review
+  cases ||--o{ reservations : reversible_holds
+  cases ||--o{ outbox : simulated_actions

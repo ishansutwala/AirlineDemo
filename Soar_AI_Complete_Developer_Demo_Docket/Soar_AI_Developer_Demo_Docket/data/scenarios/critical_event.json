@@ -1,0 +1,15 @@
+{
+  "scenario_id": "critical_event",
+  "name": "Safety event - planning stopped",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {
+    "safety_event_active": true,
+    "planning_authorization": {
+      "status": "DISABLED"
+    }
+  },
+  "overrides": [],
+  "description": "BLOCKED",
+  "expected": "BLOCKED"
+}

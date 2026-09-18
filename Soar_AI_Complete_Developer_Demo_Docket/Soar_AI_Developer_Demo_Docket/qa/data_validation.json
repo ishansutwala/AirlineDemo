@@ -1,0 +1,306 @@
+{
+  "status": "PASS",
+  "check_count": 75,
+  "checks": [
+    {
+      "check": "foreign keys",
+      "passed": true
+    },
+    {
+      "check": "integrity",
+      "passed": true
+    },
+    {
+      "check": "sources CSV row count",
+      "passed": true
+    },
+    {
+      "check": "airports CSV row count",
+      "passed": true
+    },
+    {
+      "check": "operators CSV row count",
+      "passed": true
+    },
+    {
+      "check": "aircraft CSV row count",
+      "passed": true
+    },
+    {
+      "check": "parts CSV row count",
+      "passed": true
+    },
+    {
+      "check": "part_effectivity CSV row count",
+      "passed": true
+    },
+    {
+      "check": "fault_catalog CSV row count",
+      "passed": true
+    },
+    {
+      "check": "providers CSV row count",
+      "passed": true
+    },
+    {
+      "check": "inventory_lots CSV row count",
+      "passed": true
+    },
+    {
+      "check": "engineers CSV row count",
+      "passed": true
+    },
+    {
+      "check": "authorizations CSV row count",
+      "passed": true
+    },
+    {
+      "check": "engineer_shifts CSV row count",
+      "passed": true
+    },
+    {
+      "check": "tool_assets CSV row count",
+      "passed": true
+    },
+    {
+      "check": "task_requirements CSV row count",
+      "passed": true
+    },
+    {
+      "check": "flights CSV row count",
+      "passed": true
+    },
+    {
+      "check": "defects CSV row count",
+      "passed": true
+    },
+    {
+      "check": "work_orders CSV row count",
+      "passed": true
+    },
+    {
+      "check": "open_deferrals CSV row count",
+      "passed": true
+    },
+    {
+      "check": "logistics_quotes CSV row count",
+      "passed": true
+    },
+    {
+      "check": "fleet_status CSV row count",
+      "passed": true
+    },
+    {
+      "check": "communications CSV row count",
+      "passed": true
+    },
+    {
+      "check": "documents CSV row count",
+      "passed": true
+    },
+    {
+      "check": "doc_chunks CSV row count",
+      "passed": true
+    },
+    {
+      "check": "stock never negative/over-reserved",
+      "passed": true
+    },
+    {
+      "check": "passenger count within aircraft seats",
+      "passed": true
+    },
+    {
+      "check": "flight timing order",
+      "passed": true
+    },
+    {
+      "check": "AC-001 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-002 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-003 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-004 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-005 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-006 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-007 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-008 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-009 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-010 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-011 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "AC-012 no overlapping rotations",
+      "passed": true
+    },
+    {
+      "check": "historical selected fleet effectivity",
+      "passed": true
+    },
+    {
+      "check": "SIM-PROC-21-R3 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-PROC-21-R3 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-MEL-21-R2 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-MEL-21-R2 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-SOP-REC-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-SOP-REC-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-ENG-21-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-ENG-21-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-FRA-STA-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-FRA-STA-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-STORES-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-STORES-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-AUTH-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-AUTH-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-OCC-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-OCC-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-LOG-AMS-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-LOG-AMS-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-WO-0042-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-WO-0042-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-PROC-21-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-PROC-21-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-A320-21-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-A320-21-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-A350-C02-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-A350-C02-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-UNTRUSTED-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-UNTRUSTED-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "SIM-FUTURE-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "SIM-FUTURE-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "OTHER-PRIVATE-R1 markdown hash",
+      "passed": true
+    },
+    {
+      "check": "OTHER-PRIVATE-R1 PDF exists",
+      "passed": true
+    },
+    {
+      "check": "historical work-order time order",
+      "passed": true
+    },
+    {
+      "check": "all email fixtures use invalid test domain",
+      "passed": true
+    }
+  ]
+}

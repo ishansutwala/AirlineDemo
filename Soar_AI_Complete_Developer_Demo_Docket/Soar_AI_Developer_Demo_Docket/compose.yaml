@@ -1,0 +1,15 @@
+services:
+  demo:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: qwen3:8b
+      ENABLE_SEMANTIC: "0"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - demo-runtime:/demo/runtime
+volumes:
+  demo-runtime:

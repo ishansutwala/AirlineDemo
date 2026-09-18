@@ -1,0 +1,10 @@
+{
+  "scenario_id": "nominal",
+  "name": "Base story - preparation before arrival",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {},
+  "overrides": [],
+  "description": "Current documents; eligible FRA engineer and tool; zero usable hero part at FRA; one at AMS. No dispatch decision.",
+  "expected": "AWAITING_APPROVAL"
+}

@@ -1,0 +1,12 @@
+{
+  "scenario_id": "unknown_fault",
+  "name": "Unmapped fault",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {
+    "fault_code": "DEMO-UNKNOWN"
+  },
+  "overrides": [],
+  "description": "BLOCKED_EVIDENCE",
+  "expected": "BLOCKED_EVIDENCE"
+}

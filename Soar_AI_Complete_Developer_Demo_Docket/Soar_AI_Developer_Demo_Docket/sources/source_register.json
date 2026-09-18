@@ -1,0 +1,128 @@
+[
+  {
+    "source_id": "S01",
+    "title": "In-flight health monitoring",
+    "publisher": "Airbus",
+    "url": "https://www.aircraft.airbus.com/en/newsroom/news/2022-07-in-flight-health-monitoring",
+    "consulted_on": "2026-09-14",
+    "usage": "Existing pre-arrival maintenance preparation workflow; original paraphrase only.",
+    "limitations": "Not a source of airline-specific faults, timings, spares or approved maintenance procedures."
+  },
+  {
+    "source_id": "S02",
+    "title": "Dubai-Frankfurt flight schedules",
+    "publisher": "Emirates",
+    "url": "https://www.emirates.com/de/english/destinations/dxb/fra/flights-from-dubai-to-frankfurt/",
+    "consulted_on": "2026-09-14",
+    "usage": "Public route and schedule snapshot: EK43 03:25 DXB / 08:50 FRA; EK44 11:00 FRA / 19:20 DXB; Airbus 350.",
+    "limitations": "Date-dependent schedule; same-tail assignment and all incident details are simulated; no endorsement."
+  },
+  {
+    "source_id": "S03",
+    "title": "A Recall on the Correct Use of the MEL",
+    "publisher": "Airbus Safety First",
+    "url": "https://safetyfirst.airbus.com/a-recall-on-the-correct-use-of-the-mel/",
+    "consulted_on": "2026-09-14",
+    "usage": "General MEL/dispatch boundary and authorized review; no copied procedures.",
+    "limitations": "Not the operator MEL; does not authorize dispatch of this fictional defect."
+  },
+  {
+    "source_id": "S04",
+    "title": "OurAirports open data",
+    "publisher": "OurAirports",
+    "url": "https://ourairports.com/data/",
+    "consulted_on": "2026-09-14",
+    "usage": "Public-domain airport identifiers, names and coordinates transcribed from linked airport pages.",
+    "limitations": "Community-maintained reference; no guarantee of accuracy; not for navigation. Bulk CSV download was not used."
+  },
+  {
+    "source_id": "S05",
+    "title": "Four Priorities to Strengthen the Aviation Supply Chain",
+    "publisher": "IATA",
+    "url": "https://www.iata.org/en/pressroom/2026-releases/06-24-iata-outlines-four-priorities-to-strengthen-aviation-supply-chain/",
+    "consulted_on": "2026-09-14",
+    "usage": "Problem framing: visibility and integration of maintenance and material information.",
+    "limitations": "Industry-level evidence, not a quantified benefit estimate for this demo."
+  },
+  {
+    "source_id": "S06",
+    "title": "Structured Outputs",
+    "publisher": "Ollama",
+    "url": "https://docs.ollama.com/capabilities/structured-outputs",
+    "consulted_on": "2026-09-14",
+    "usage": "Local structured JSON response API design.",
+    "limitations": "Schema validity is not factual or aviation-safety validity."
+  },
+  {
+    "source_id": "S07",
+    "title": "Tool calling",
+    "publisher": "Ollama",
+    "url": "https://docs.ollama.com/capabilities/tool-calling",
+    "consulted_on": "2026-09-14",
+    "usage": "Optional model tool-selection implementation reference.",
+    "limitations": "This reference build uses a bounded workflow and schema-constrained search planning, not unrestricted autonomous tools."
+  },
+  {
+    "source_id": "S08",
+    "title": "Generate embeddings",
+    "publisher": "Ollama",
+    "url": "https://docs.ollama.com/api/embed",
+    "consulted_on": "2026-09-14",
+    "usage": "Optional local semantic retrieval adapter.",
+    "limitations": "Embedding model weights are not bundled; live inference requires local installation."
+  },
+  {
+    "source_id": "S09",
+    "title": "FAQ / local-only cloud settings",
+    "publisher": "Ollama",
+    "url": "https://docs.ollama.com/faq",
+    "consulted_on": "2026-09-14",
+    "usage": "Local inference and OLLAMA_NO_CLOUD=1 deployment setting.",
+    "limitations": "Setting alone is not proof of sovereignty: also control egress, credentials, logs and updates."
+  },
+  {
+    "source_id": "S10",
+    "title": "Qwen3-8B model card",
+    "publisher": "Qwen",
+    "url": "https://huggingface.co/Qwen/Qwen3-8B",
+    "consulted_on": "2026-09-14",
+    "usage": "Candidate open-weight general model; model card lists Apache-2.0.",
+    "limitations": "Not aviation-certified or validated for this task; no weights bundled; evaluate installed artifact."
+  },
+  {
+    "source_id": "S11",
+    "title": "qwen3:8b model library entry",
+    "publisher": "Ollama",
+    "url": "https://ollama.com/library/qwen3:8b",
+    "consulted_on": "2026-09-14",
+    "usage": "Concrete optional local model tag.",
+    "limitations": "Tags can change; record local model digest and runtime version before presentation."
+  },
+  {
+    "source_id": "S12",
+    "title": "Build an MCP server",
+    "publisher": "Model Context Protocol",
+    "url": "https://modelcontextprotocol.io/docs/develop/build-server",
+    "consulted_on": "2026-09-14",
+    "usage": "Optional read-only stdio adapter design.",
+    "limitations": "Remote enterprise MCP authentication and production gateway are not provided by the local stdio adapter."
+  },
+  {
+    "source_id": "S13",
+    "title": "Authorization security considerations",
+    "publisher": "Model Context Protocol",
+    "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization/security-considerations",
+    "consulted_on": "2026-09-14",
+    "usage": "Production authorization considerations and token audience isolation.",
+    "limitations": "Use the enterprise-approved supported specification and SDK versions at deployment."
+  },
+  {
+    "source_id": "S14",
+    "title": "zoneinfo: IANA time zone support",
+    "publisher": "Python",
+    "url": "https://docs.python.org/3/library/zoneinfo.html",
+    "consulted_on": "2026-09-14",
+    "usage": "UTC storage, timezone-aware local display.",
+    "limitations": "tzdata package may be needed on Windows; fixture clock is fixed, not live."
+  }
+]

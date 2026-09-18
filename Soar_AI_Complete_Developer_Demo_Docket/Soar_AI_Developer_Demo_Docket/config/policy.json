@@ -1,0 +1,25 @@
+{
+  "inventory_max_age_minutes": 30,
+  "roster_max_age_minutes": 30,
+  "tool_max_age_minutes": 30,
+  "plan_ttl_minutes": 20,
+  "stand_access_minutes": 5,
+  "hold_ttl_minutes": 60,
+  "allowed_write_actions": [
+    "DRAFT_WORK_ORDER",
+    "SIMULATED_NOTIFY",
+    "REVERSIBLE_PART_HOLD"
+  ],
+  "forbidden_actions": [
+    "AIRWORTHINESS_DECISION",
+    "DISPATCH_APPROVAL",
+    "DIVERSION_ADVICE",
+    "FLIGHT_CONTINUATION_DECISION",
+    "AIRCRAFT_CONTROL",
+    "TRANSPORT_BOOKING",
+    "AIRCRAFT_SWAP_EXECUTION"
+  ],
+  "default_operator": "SIM-AIR",
+  "reference_clock_utc": "2026-09-14T06:15:00Z",
+  "note": "Application test policy only; not an approved airline operating policy."
+}

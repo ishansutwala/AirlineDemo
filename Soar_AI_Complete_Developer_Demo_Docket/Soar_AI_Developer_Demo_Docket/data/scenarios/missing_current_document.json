@@ -1,0 +1,18 @@
+{
+  "scenario_id": "missing_current_document",
+  "name": "Current applicable planning brief unavailable",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {},
+  "overrides": [
+    {
+      "table": "documents",
+      "key": "SIM-PROC-21-R3",
+      "values": {
+        "status": "WITHDRAWN"
+      }
+    }
+  ],
+  "description": "BLOCKED_EVIDENCE; obsolete and wrong-type records never substitute",
+  "expected": "BLOCKED_EVIDENCE; obsolete and wrong-type records never substitute"
+}

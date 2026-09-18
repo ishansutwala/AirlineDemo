@@ -1,0 +1,24 @@
+{
+  "source_id": "S02",
+  "consulted_on": "2026-09-14",
+  "data_class": "PUBLIC_ROUTE_AND_PUBLISHED_TIME_REFERENCE",
+  "flights": [
+    {
+      "flight": "EK43",
+      "origin": "DXB",
+      "departure_local": "03:25",
+      "destination": "FRA",
+      "arrival_local": "08:50",
+      "aircraft_label_as_published": "Airbus 350"
+    },
+    {
+      "flight": "EK44",
+      "origin": "FRA",
+      "departure_local": "11:00",
+      "destination": "DXB",
+      "arrival_local": "19:20",
+      "aircraft_label_as_published": "Airbus 350"
+    }
+  ],
+  "limitations": "Not a same-tail operational record. Times may vary by date. The simulation fixes the calendar to 2026-09-14 and uses Europe/Berlin and Asia/Dubai."
+}

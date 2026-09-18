@@ -1,0 +1,10 @@
+From: stores.fra@example.invalid
+To: mcc@demo-air.example.invalid
+Subject: [SIMULATION] FRA stock exception
+Date: Mon, 14 Sep 2026 06:04:00 +0000
+Message-ID: <MSG-003@example.invalid>
+Content-Type: text/plain; charset=utf-8
+
+SIMULATION ONLY - NO EMAIL WAS SENT.
+
+Physical count is one, but the unit is quarantined. It must not be counted as serviceable stock.

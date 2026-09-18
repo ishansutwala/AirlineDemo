@@ -1,0 +1,16 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "mode": {
+      "default": "reference",
+      "enum": [
+        "reference",
+        "ollama"
+      ],
+      "title": "Mode",
+      "type": "string"
+    }
+  },
+  "title": "Analyze",
+  "type": "object"
+}

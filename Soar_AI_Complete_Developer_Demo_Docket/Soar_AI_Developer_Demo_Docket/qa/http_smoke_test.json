@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "transport": "HTTPX to local Uvicorn HTTP service",
+  "mode": "reference",
+  "sequence": [
+    "load",
+    "analyze",
+    "approve",
+    "advance prearrival",
+    "arrive at stand",
+    "external completion",
+    "audit export"
+  ]
+}

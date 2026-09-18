@@ -1,0 +1,42 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "source_system": {
+      "const": "SIMULATED_MAINTENANCE_SYSTEM",
+      "title": "Source System",
+      "type": "string"
+    },
+    "external_reference": {
+      "maxLength": 100,
+      "minLength": 5,
+      "title": "External Reference",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "SERVICEABLE_RECORDED_EXTERNALLY",
+        "MAINTENANCE_CONTINUES"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "recorded_at": {
+      "title": "Recorded At",
+      "type": "string"
+    },
+    "note": {
+      "maxLength": 2000,
+      "title": "Note",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_system",
+    "external_reference",
+    "status",
+    "recorded_at",
+    "note"
+  ],
+  "title": "Outcome",
+  "type": "object"
+}

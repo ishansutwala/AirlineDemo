@@ -1,0 +1,19 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "queries": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3,
+      "minItems": 1,
+      "title": "Queries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "queries"
+  ],
+  "title": "SearchPlan",
+  "type": "object"
+}

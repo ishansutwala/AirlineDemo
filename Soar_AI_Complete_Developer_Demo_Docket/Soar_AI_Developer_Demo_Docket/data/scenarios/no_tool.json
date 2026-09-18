@@ -1,0 +1,18 @@
+{
+  "scenario_id": "no_tool",
+  "name": "No current calibrated diagnostic tool",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {},
+  "overrides": [
+    {
+      "table": "tool_assets",
+      "key": "TOOL-FRA-01",
+      "values": {
+        "calibration_expiry_utc": "2026-09-01T00:00:00Z"
+      }
+    }
+  ],
+  "description": "BLOCKED_EVIDENCE",
+  "expected": "BLOCKED_EVIDENCE"
+}

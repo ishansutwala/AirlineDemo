@@ -1,0 +1,67 @@
+{
+  "method": "Airport facility fields transcribed from OurAirports pages retrieved with web browsing; not a bulk-file download. Timezones are scenario IANA mappings checked by zoneinfo conversions.",
+  "consulted_on": "2026-09-14",
+  "license": "Airport data: public domain per S04; route values: factual reference attributed to S02. No complete copyrighted articles or airline manuals redistributed.",
+  "airports": [
+    {
+      "iata": "DXB",
+      "source_url": "https://ourairports.com/airports/OMDB/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "FRA",
+      "source_url": "https://ourairports.com/airports/EDDF/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "AMS",
+      "source_url": "https://ourairports.com/airports/EHAM/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "CDG",
+      "source_url": "https://ourairports.com/airports/LFPG/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "MUC",
+      "source_url": "https://ourairports.com/airports/EDDM/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "VIE",
+      "source_url": "https://ourairports.com/airports/LOWW/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "LHR",
+      "source_url": "https://ourairports.com/airports/EGLL/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "FCO",
+      "source_url": "https://ourairports.com/airports/LIRF/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "DOH",
+      "source_url": "https://ourairports.com/airports/OTHH/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "AUH",
+      "source_url": "https://ourairports.com/airports/OMAA/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "ZRH",
+      "source_url": "https://ourairports.com/airports/LSZH/",
+      "data_class": "PUBLIC_REFERENCE"
+    },
+    {
+      "iata": "BRU",
+      "source_url": "https://ourairports.com/airports/EBBR/",
+      "data_class": "PUBLIC_REFERENCE"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "scenario_id": "busy_engineer",
+  "name": "FRA engineer busy beyond departure",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {},
+  "overrides": [
+    {
+      "table": "engineer_shifts",
+      "key": "SHIFT-FRA-01-0",
+      "values": {
+        "busy_until_utc": "2026-09-14T09:00:00Z"
+      }
+    }
+  ],
+  "description": "Calculated ground delay; no pretend instant availability",
+  "expected": "Calculated ground delay; no pretend instant availability"
+}

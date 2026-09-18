@@ -1,0 +1,14 @@
+{
+  "scenario_id": "expired_authorization",
+  "name": "Expired ground permission",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {
+    "planning_authorization": {
+      "expires_at": "2026-09-14T06:00:00Z"
+    }
+  },
+  "overrides": [],
+  "description": "BLOCKED",
+  "expected": "BLOCKED"
+}

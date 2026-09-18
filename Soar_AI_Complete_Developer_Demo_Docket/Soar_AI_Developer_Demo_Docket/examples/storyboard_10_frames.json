@@ -1,0 +1,62 @@
+[
+  {
+    "frame": 1,
+    "title": "Establish the rotation",
+    "screen_action": "Open the workspace. Show DXB-FRA-DXB and the 11:00 next departure. Explain that the airline and incident are fictional.",
+    "expected_or_presenter": "\"We are preparing the ground response, not controlling this aircraft.\""
+  },
+  {
+    "frame": 2,
+    "title": "Receive an airborne event",
+    "screen_action": "As SIMULATOR, load nominal. Show the event timestamp, destination, source and reported symptom.",
+    "expected_or_presenter": "Case CREATED. The physical fault has not been diagnosed by the model."
+  },
+  {
+    "frame": 3,
+    "title": "Apply the authority boundary",
+    "screen_action": "Inspect the supplied authorization: ENABLED, GROUND_PREPARATION_ONLY, expires 07:00Z.",
+    "expected_or_presenter": "\"Maintenance Control permits preparation. Flight safety stays outside this workspace.\""
+  },
+  {
+    "frame": 4,
+    "title": "Assemble relevant evidence",
+    "screen_action": "Select MCC and run Prepare recovery plan. Reference mode is visibly marked; live mode performs the configured local model calls.",
+    "expected_or_presenter": "History includes HIST-0042. Retrieve applicable current documents; exclude wrong type, configuration, tenant, future and untrusted content."
+  },
+  {
+    "frame": 5,
+    "title": "Check the ground resources",
+    "screen_action": "Show FRA physical stock 1 but usable stock 0; AMS usable 1; eligible FRA engineer and tool; expired and wrong-type alternatives.",
+    "expected_or_presenter": "\"A database count is not the same as an available, usable component or an authorized person.\""
+  },
+  {
+    "frame": 6,
+    "title": "Compare options",
+    "screen_action": "Show A: conditional local resolution. B: dispatch-review evidence only. C: component movement contingency. D: no uncommitted compatible spare.",
+    "expected_or_presenter": "A meets the illustrative schedule if its physical assumptions hold. C does not: AMS part ready at FRA 12:20 CEST. B is never a flight permission."
+  },
+  {
+    "frame": 7,
+    "title": "Approve preparation",
+    "screen_action": "As MCC, click Approve preparation before the plan expires.",
+    "expected_or_presenter": "One approval, one reversible component hold, and three simulated outbox records. No real notification, shipment or work-order integration occurs."
+  },
+  {
+    "frame": 8,
+    "title": "Aircraft remains airborne",
+    "screen_action": "Switch to SIMULATOR; advance to 08:30 CEST. Show AIRBORNE, 20 minutes to stand, prepared evidence and held contingency.",
+    "expected_or_presenter": "\"The aircraft has not arrived, but the ground team has its preparation package.\""
+  },
+  {
+    "frame": 9,
+    "title": "Arrive and validate physically",
+    "screen_action": "As SIMULATOR, click Arrive at stand: 08:50 CEST.",
+    "expected_or_presenter": "State ON_STAND. Authorized personnel perform physical work outside this application. No actual procedure is generated here."
+  },
+  {
+    "frame": 10,
+    "title": "Record the external outcome",
+    "screen_action": "As SIMULATOR, record external completion at 09:35 CEST; export evidence JSON.",
+    "expected_or_presenter": "State CLOSED; unused hold released. Status came from an external-system fixture, not from the model."
+  }
+]

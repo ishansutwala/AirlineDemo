@@ -1,0 +1,39 @@
+# REST Client / HTTP request examples. Use the running local demo only.
+@base = http://127.0.0.1:8000
+@case = CASE-EVT-20260914-0001
+
+### Destructively reset the isolated demonstration database.
+POST {{base}}/api/demo/load
+Authorization: Bearer demo-simulator-local
+Content-Type: application/json
+
+{"scenario_id":"nominal"}
+
+### Analyze. Change reference to ollama only after local-model setup.
+POST {{base}}/api/cases/{{case}}/analyze
+Authorization: Bearer demo-mcc-local
+Content-Type: application/json
+
+{"mode":"reference"}
+
+### Inspect the returned plan hash and case version before approval.
+GET {{base}}/api/cases/{{case}}
+Authorization: Bearer demo-viewer-local
+
+### Template: replace plan_hash and version with the current analysis response.
+POST {{base}}/api/cases/{{case}}/approve-preparation
+Authorization: Bearer demo-mcc-local
+Content-Type: application/json
+
+{"case_version":2,"plan_hash":"REPLACE_WITH_CURRENT_64_CHARACTER_HASH","idempotency_key":"manual-approval-0001"}
+
+### Revoke: releases the hold and invalidates the plan.
+POST {{base}}/api/cases/{{case}}/update
+Authorization: Bearer demo-simulator-local
+Content-Type: application/json
+
+{"source_sequence":2,"planning_status":"REVOKED"}
+
+### Evidence export.
+GET {{base}}/api/cases/{{case}}/export
+Authorization: Bearer demo-viewer-local

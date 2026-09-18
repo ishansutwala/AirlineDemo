@@ -1,0 +1,9 @@
+step,utc,description,provenance
+01,2026-09-14T06:05:00Z,Airborne maintenance event,EXTERNAL_SIMULATION
+02,2026-09-14T06:06:00Z,MCC preparation authorization,EXTERNAL_SIMULATION
+03,2026-09-14T06:15:00Z,Analysis + human preparation review,SCENARIO_CLOCK_NOT_LATENCY
+04,2026-09-14T06:30:00Z,"Still airborne, preparation available",SCENARIO_CLOCK
+05,2026-09-14T06:40:00Z,Assumed touchdown,SYNTHETIC_TIMING
+06,2026-09-14T06:50:00Z,Arrival at stand,EXTERNAL_SIMULATION
+07,2026-09-14T07:35:00Z,External maintenance completion,EXTERNAL_SIMULATION
+08,2026-09-14T09:00:00Z,Scheduled next departure; not executed by app,PUBLIC_PATTERN_SYNTHETIC_ALLOCATION

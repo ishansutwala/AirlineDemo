@@ -1,0 +1,18 @@
+{
+  "scenario_id": "late_cutoff",
+  "name": "Air transport cutoff missed",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {},
+  "overrides": [
+    {
+      "table": "logistics_quotes",
+      "key": "Q-AMS-AIR",
+      "values": {
+        "cutoff_utc": "2026-09-14T06:20:00Z"
+      }
+    }
+  ],
+  "description": "AIR option rejected; evaluate quoted alternatives, never invent a departure",
+  "expected": "AIR option rejected; evaluate quoted alternatives, never invent a departure"
+}

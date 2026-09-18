@@ -1,0 +1,9 @@
+{
+  "event_id": "EVT-20260914-0001",
+  "source_sequence": 2,
+  "destination": "VIE",
+  "planning_authorization": {
+    "status": "DISABLED"
+  },
+  "note": "Existing crew decision reported by external adapter; invalidate FRA plan. No in-flight advice."
+}

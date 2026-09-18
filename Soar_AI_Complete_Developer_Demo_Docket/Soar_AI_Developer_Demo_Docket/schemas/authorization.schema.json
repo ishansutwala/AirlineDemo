@@ -1,0 +1,40 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "enum": [
+        "ENABLED",
+        "DISABLED",
+        "REVOKED"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "issued_by": {
+      "title": "Issued By",
+      "type": "string"
+    },
+    "issued_at": {
+      "title": "Issued At",
+      "type": "string"
+    },
+    "expires_at": {
+      "title": "Expires At",
+      "type": "string"
+    },
+    "scope": {
+      "const": "GROUND_PREPARATION_ONLY",
+      "title": "Scope",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "issued_by",
+    "issued_at",
+    "expires_at",
+    "scope"
+  ],
+  "title": "Authorization",
+  "type": "object"
+}

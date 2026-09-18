@@ -1,0 +1,75 @@
+{
+  "$defs": {
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "evidence_ids"
+      ],
+      "title": "Claim",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "summary": {
+      "maxLength": 1200,
+      "minLength": 1,
+      "title": "Summary",
+      "type": "string"
+    },
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/Claim"
+      },
+      "maxItems": 6,
+      "minItems": 1,
+      "title": "Claims",
+      "type": "array"
+    },
+    "unresolved_questions": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 8,
+      "title": "Unresolved Questions",
+      "type": "array"
+    },
+    "dispatch_eligibility": {
+      "const": "UNKNOWN",
+      "title": "Dispatch Eligibility",
+      "type": "string"
+    },
+    "preparation_only": {
+      "const": true,
+      "title": "Preparation Only",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "summary",
+    "claims",
+    "unresolved_questions",
+    "dispatch_eligibility",
+    "preparation_only"
+  ],
+  "title": "ModelExplanation",
+  "type": "object"
+}

@@ -1,0 +1,17 @@
+part_id,description,unit,reference_cost_eur,hazmat,data_class
+DEMO-CZT-100,Cabin zone temperature indication module (fictional part),EA,3364.73,0,SYNTHETIC
+DEMO-PART-002,Cabin zone indication module - non-interchangeable variant (fictional part),EA,1986.44,0,SYNTHETIC
+DEMO-PART-003,Cabin display interface (fictional part),EA,4714.12,0,SYNTHETIC
+DEMO-PART-004,Passenger reading-light unit (fictional part),EA,972.47,0,SYNTHETIC
+DEMO-PART-005,Seat control panel (fictional part),EA,4001.26,0,SYNTHETIC
+DEMO-PART-006,Galley status display (fictional part),EA,3556.56,0,SYNTHETIC
+DEMO-PART-007,Cabin data interface (fictional part),EA,1544.04,0,SYNTHETIC
+DEMO-PART-008,Cabin indicator harness (fictional part),EA,1125.99,0,SYNTHETIC
+DEMO-PART-009,Approved demo diagnostic connector (fictional part),EA,597.93,0,SYNTHETIC
+DEMO-PART-010,Cabin air outlet indicator (fictional part),EA,2170.25,0,SYNTHETIC
+DEMO-PART-011,IFE interface module (fictional part),EA,5009.08,0,SYNTHETIC
+DEMO-PART-012,Seat audio jack (fictional part),EA,679.02,0,SYNTHETIC
+DEMO-PART-013,Galley latch indication unit (fictional part),EA,556.66,0,SYNTHETIC
+DEMO-PART-014,Cabin display power module (fictional part),EA,886.59,0,SYNTHETIC
+DEMO-PART-015,Lavatory occupancy indicator (fictional part),EA,1861.62,0,SYNTHETIC
+DEMO-PART-016,Cabin call-light display (fictional part),EA,1203.43,0,SYNTHETIC

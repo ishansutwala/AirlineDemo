@@ -1,0 +1,56 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "source_sequence": {
+      "minimum": 2,
+      "title": "Source Sequence",
+      "type": "integer"
+    },
+    "destination": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Z]{3}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Destination"
+    },
+    "planning_status": {
+      "anyOf": [
+        {
+          "enum": [
+            "DISABLED",
+            "REVOKED"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Planning Status"
+    },
+    "safety_event_active": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Safety Event Active"
+    }
+  },
+  "required": [
+    "source_sequence"
+  ],
+  "title": "Update",
+  "type": "object"
+}

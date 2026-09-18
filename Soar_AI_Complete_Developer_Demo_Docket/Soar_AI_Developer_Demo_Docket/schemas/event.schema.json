@@ -1,0 +1,149 @@
+{
+  "$defs": {
+    "Authorization": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "ENABLED",
+            "DISABLED",
+            "REVOKED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "issued_by": {
+          "title": "Issued By",
+          "type": "string"
+        },
+        "issued_at": {
+          "title": "Issued At",
+          "type": "string"
+        },
+        "expires_at": {
+          "title": "Expires At",
+          "type": "string"
+        },
+        "scope": {
+          "const": "GROUND_PREPARATION_ONLY",
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "issued_by",
+        "issued_at",
+        "expires_at",
+        "scope"
+      ],
+      "title": "Authorization",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "event_id": {
+      "pattern": "^[A-Za-z0-9_-]{1,80}$",
+      "title": "Event Id",
+      "type": "string"
+    },
+    "source_system": {
+      "const": "SIMULATED_MCC_ADAPTER",
+      "title": "Source System",
+      "type": "string"
+    },
+    "source_sequence": {
+      "minimum": 1,
+      "title": "Source Sequence",
+      "type": "integer"
+    },
+    "operator_id": {
+      "title": "Operator Id",
+      "type": "string"
+    },
+    "aircraft_id": {
+      "title": "Aircraft Id",
+      "type": "string"
+    },
+    "flight_id": {
+      "title": "Flight Id",
+      "type": "string"
+    },
+    "next_flight_id": {
+      "title": "Next Flight Id",
+      "type": "string"
+    },
+    "destination": {
+      "pattern": "^[A-Z]{3}$",
+      "title": "Destination",
+      "type": "string"
+    },
+    "occurred_at": {
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "received_at": {
+      "title": "Received At",
+      "type": "string"
+    },
+    "fault_code": {
+      "title": "Fault Code",
+      "type": "string"
+    },
+    "reported_symptom": {
+      "maxLength": 3000,
+      "title": "Reported Symptom",
+      "type": "string"
+    },
+    "crew_operational_status": {
+      "maxLength": 200,
+      "title": "Crew Operational Status",
+      "type": "string"
+    },
+    "planning_authorization": {
+      "$ref": "#/$defs/Authorization"
+    },
+    "safety_event_active": {
+      "title": "Safety Event Active",
+      "type": "boolean"
+    },
+    "data_class": {
+      "const": "SYNTHETIC",
+      "title": "Data Class",
+      "type": "string"
+    },
+    "note": {
+      "maxLength": 3000,
+      "title": "Note",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "source_system",
+    "source_sequence",
+    "operator_id",
+    "aircraft_id",
+    "flight_id",
+    "next_flight_id",
+    "destination",
+    "occurred_at",
+    "received_at",
+    "fault_code",
+    "reported_symptom",
+    "crew_operational_status",
+    "planning_authorization",
+    "safety_event_active",
+    "data_class",
+    "note"
+  ],
+  "title": "Event",
+  "type": "object"
+}

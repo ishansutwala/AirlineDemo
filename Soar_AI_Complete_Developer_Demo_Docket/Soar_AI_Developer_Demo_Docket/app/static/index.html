@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Soar.AI | Ground Recovery Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="app-layout" id="appLayout">
+  <!-- Left Navigation Sidebar (Plain Simple White Theme) -->
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">SOAR.AI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Menu (Clean & Unclustered - Only Menu Names) -->
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">OPERATIONS &amp; RECOVERY</div>
+      
+      <!-- 1st: Flight simulator -->
+      <button type="button" class="nav-btn active" data-tab="tab-flight-sim" id="menu-flight-sim">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        <span class="nav-label">Flight Simulator</span>
+      </button>
+
+      <!-- 2nd: Recovery and briefing -->
+      <button type="button" class="nav-btn" data-tab="tab-recovery" id="menu-recovery">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="nav-label">Recovery &amp; Briefing</span>
+      </button>
+
+      <!-- 3rd: Material and staff -->
+      <button type="button" class="nav-btn" data-tab="tab-materials" id="menu-materials">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span class="nav-label">Material &amp; Staff</span>
+      </button>
+
+      <!-- 4th: Additional flights (with icon-based CRUD) -->
+      <button type="button" class="nav-btn" data-tab="tab-flights" id="menu-flights">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+        <span class="nav-label">Additional Flights</span>
+      </button>
+
+      <!-- Audit trail -->
+      <button type="button" class="nav-btn" data-tab="tab-audit" id="menu-audit">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+        <span class="nav-label">Audit Trail</span>
+      </button>
+
+      <div class="nav-section-label" style="margin-top:16px;">SYSTEM &amp; ARCHITECTURE</div>
+      
+      <!-- Pipeline signal board -->
+      <button type="button" class="nav-btn" data-tab="tab-pipeline" id="menu-pipeline">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="nav-label">Pipeline Architecture</span>
+      </button>
+
+      <!-- Evidence and citations (submenu kept at the last as requested) -->
+      <button type="button" class="nav-btn" data-tab="tab-evidence" id="menu-evidence">
+        <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span class="nav-label">Evidence &amp; Citations</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-status-card">
+        <div class="status-clock-row">
+          <span class="status-label">SCENARIO CLOCK</span>
+          <strong class="status-clock-val" id="sidebarScenarioClock">08:15 CEST</strong>
+        </div>
+        <div class="sidebar-sub-meta">Sim Date: 14 Sep 2026</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Body -->
+  <div class="main-layout">
+    <!-- Top Header Bar with Open/Close Toggle Button on Top Left -->
+    <header class="top-bar">
+      <div class="header-left-group">
+        <!-- Button on top left to open and close the left panel -->
+        <button type="button" class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Open / Close Left Panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+
+        <div class="header-titles">
+          <h1 id="pageHeading">Ground Recovery Workspace</h1>
+          <p id="pageSubHeading">Use the remaining flight time to prepare the ground response.</p>
+        </div>
+      </div>
+
+      <div class="header-right-meta">
+        <div class="boundary">NO SLM ONBOARD<br>PREPARATION ONLY</div>
+      </div>
+    </header>
+
+    <!-- Global Disclaimer Banner -->
+    <div class="disclaimer">
+      FICTIONAL AIRLINE DATA. Real route reference; no real incident, dispatch permission, maintenance instruction or airline endorsement.
+    </div>
+
+    <!-- Global Messages (Error / Notice) -->
+    <div id="error" class="error" hidden></div>
+    <div id="notice" class="notice">Choose SIMULATOR and load a scenario. Then choose MCC to analyze and approve. Sample local personas are not production authentication.</div>
+
+    <main class="page-content">
+      <!-- ==========================================
+           TAB 1: FLIGHT SIMULATOR (Photo 1 Elements)
+           ========================================== -->
+      <section id="tab-flight-sim" class="tab-pane active">
+        <!-- Controls Bar -->
+        <div class="controls">
+          <label>Demo persona
+            <select id="role">
+              <option>MCC</option>
+              <option>SIMULATOR</option>
+              <option>OCC</option>
+              <option>VIEWER</option>
+            </select>
+          </label>
+          <label>Token override (optional)
+            <input id="tokenOverride" type="password" placeholder="Uses sample persona token" autocomplete="off">
+          </label>
+          <label>Scenario
+            <select id="scenario"></select>
+          </label>
+          <label>Inference
+            <select id="mode">
+              <option value="reference">Reference replay - NO AI inference</option>
+              <option value="ollama">Live local SLM via Ollama</option>
+            </select>
+          </label>
+          <div class="control-actions">
+            <button type="button" id="load">Load / reset fixture</button>
+            <button type="button" id="analyze">Prepare recovery plan</button>
+            <button type="button" id="approve">Approve preparation</button>
+          </div>
+        </div>
+
+        <!-- Hero Card (Flight Overview) -->
+        <div class="hero">
+          <div>
+            <div class="eyebrow" id="heroAircraftType">A350-900 (AC-001)</div>
+            <h2 id="heroRouteTitle">DXB <span class="arrow">to</span> FRA</h2>
+            <p id="flight">AC-001 | Flight SIM043 / EK43-pattern | Next: SIM044 / EK44-pattern</p>
+            <div class="route">
+              <span id="heroOrigin">Dubai</span>
+              <div class="route-line"></div>
+              <strong id="airborne">No case loaded</strong>
+              <div class="route-line"></div>
+              <span id="heroDest">Frankfurt</span>
+            </div>
+          </div>
+          <div class="metrics">
+            <div>
+              <strong id="clock">08:15</strong>
+              <span id="clockLabel">Scenario clock</span>
+            </div>
+            <div>
+              <strong id="remaining">35</strong>
+              <span>Minutes to stand</span>
+            </div>
+            <div>
+              <strong id="heroNextDep">11:00</strong>
+              <span>Scheduled next departure</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Line -->
+        <div class="statusline">
+          <span id="state">NOT STARTED</span>
+          <span id="inference">No inference performed</span>
+          <span id="retrieval">No retrieval performed</span>
+        </div>
+
+        <!-- Incoming event and ground permission panel -->
+        <div class="panel">
+          <h2>Incoming event and ground permission</h2>
+          <div id="eventDetails">No maintenance event loaded.</div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 2: RECOVERY AND BRIEFING (Photo 2 Elements)
+           ========================================== -->
+      <section id="tab-recovery" class="tab-pane">
+        <div class="grid">
+          <!-- Left: Recovery Options -->
+          <div class="panel">
+            <h2>Recovery options</h2>
+            <div id="gaps"></div>
+            <div id="options" class="empty">Load a case, then prepare the plan.</div>
+          </div>
+
+          <!-- Right: Preparation Briefing -->
+          <div class="panel">
+            <h2>Preparation briefing</h2>
+            <div id="brief" class="empty">The model never classifies flight safety or approves release.</div>
+            <div id="modelClaims"></div>
+            <h3>Read workflow</h3>
+            <div id="trace"></div>
+            <h3>Approval &amp; simulated actions</h3>
+            <div id="actions"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 3: MATERIAL AND STAFF (Photo 3 Elements)
+           ========================================== -->
+      <section id="tab-materials" class="tab-pane">
+        <div class="grid">
+          <!-- Left: Material availability -->
+          <div class="panel">
+            <h2>Material availability</h2>
+            <div id="parts" class="empty">Shows usable stock, not just physical count.</div>
+          </div>
+
+          <!-- Right: People, tooling & historical context -->
+          <div class="panel">
+            <h2>People, tooling &amp; historical context</h2>
+            <div id="resources" class="empty">Task authorization, current calibration and source timestamps.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 4: ADDITIONAL FLIGHTS (Photo 5 Elements with Icons)
+           ========================================== -->
+      <section id="tab-flights" class="tab-pane">
+        <!-- External Event Simulator (Simulator controls) -->
+        <div class="panel simulator">
+          <h2>External event simulator</h2>
+          <p>SIMULATOR persona only. These controls represent external airline-system messages, never SLM actions.</p>
+          <div class="buttons">
+            <button type="button" id="ready">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Advance to 08:30 CEST
+            </button>
+            <button type="button" id="land">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Arrive at stand: 08:50 CEST
+            </button>
+            <button type="button" id="outcome">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Record external completion: 09:35 CEST
+            </button>
+            <button type="button" id="revoke">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              Revoke planning permission
+            </button>
+            <button type="button" id="divert">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+              Report diversion to VIE
+            </button>
+            <button type="button" id="export">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export evidence JSON
+            </button>
+          </div>
+        </div>
+
+        <!-- Flight Schedule & Fleet Operations Table + CRUD with ICON buttons -->
+        <div class="panel flight-crud-panel">
+          <div class="flight-full-panel">
+            <div class="flight-list-header">
+              <div>
+                <h3 style="margin:0 0 4px">✈ Flight Schedule &amp; Fleet Operations</h3>
+                <p class="small" style="margin:0">Select any flight row to Load as Active Incident, Edit, Update, or Delete.</p>
+              </div>
+              <div class="flight-filter-row">
+                <div class="search-input-wrap">
+                  <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input id="flightSearchInput" placeholder="Filter by Flight ID, Route, Tail, or Status...">
+                </div>
+                <!-- Icon button for refresh -->
+                <button type="button" id="refreshFlightsBtn" class="icon-btn-action secondary-btn" title="Refresh flights schedule">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                  <span>Refresh</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Flights Table -->
+            <div class="flight-table-wrapper">
+              <table id="flightsTable">
+                <thead>
+                  <tr>
+                    <th style="width:36px;text-align:center">Sel</th>
+                    <th>Flight ID</th>
+                    <th>Flight #</th>
+                    <th>Tail</th>
+                    <th>Origin</th>
+                    <th>Dest</th>
+                    <th>Departure UTC</th>
+                    <th>Arrival UTC</th>
+                    <th>Pax</th>
+                    <th>Status</th>
+                    <th style="text-align:center;width:100px">Quick Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="flightsTableBody">
+                  <tr><td colspan="11" class="empty">Loading flights...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Flight Form Drawer with Icon-based CRUD Buttons -->
+            <div class="flight-details-drawer">
+              <div class="drawer-header">
+                <h3 id="flightFormTitle">Add New Flight / Selected Flight Details</h3>
+                <div id="selectionBadge" class="selection-badge" style="display:none">Active Selection: <strong id="selectedFlightTag">None</strong></div>
+              </div>
+              <form id="flightForm" onsubmit="return false;">
+                <div class="form-grid-4col">
+                  <label>Flight ID *<input id="f_flight_id" placeholder="e.g. FLT-045" required></label>
+                  <label>Operator ID *<input id="f_operator_id" value="SIM-AIR" required></label>
+                  <label>Aircraft ID *<input id="f_aircraft_id" placeholder="e.g. AC-001" required></label>
+                  <label>Display Number *<input id="f_display_number" placeholder="e.g. SIM045" required></label>
+                  <label>Origin (IATA) *<input id="f_origin" placeholder="e.g. DXB" maxlength="3" required></label>
+                  <label>Destination (IATA) *<input id="f_destination" placeholder="e.g. FRA" maxlength="3" required></label>
+                  <label>Scheduled Out UTC *<input id="f_scheduled_out_utc" placeholder="2026-09-14T01:00:00Z" required></label>
+                  <label>Scheduled In UTC *<input id="f_scheduled_in_utc" placeholder="2026-09-14T07:00:00Z" required></label>
+                  <label>Estimated Landing UTC *<input id="f_estimated_landing_utc" placeholder="2026-09-14T06:50:00Z" required></label>
+                  <label>Estimated In-Block UTC *<input id="f_estimated_inblock_utc" placeholder="2026-09-14T07:00:00Z" required></label>
+                  <label>Turnaround Ready UTC *<input id="f_other_turnaround_ready_utc" placeholder="2026-09-14T00:40:00Z" required></label>
+                  <label>Dispatch Buffer (mins)<input id="f_dispatch_buffer_minutes" type="number" value="20" required></label>
+                  <label>Passengers<input id="f_passengers" type="number" value="280" required></label>
+                  <label>Crew Ready<select id="f_crew_ready"><option value="1">1 (Yes)</option><option value="0">0 (No)</option></select></label>
+                  <label>Slot Confirmed<select id="f_slot_confirmed"><option value="1">1 (Yes)</option><option value="0">0 (No)</option></select></label>
+                  <label>Flight Status<select id="f_status"><option>SCHEDULED</option><option>AIRBORNE</option><option>LANDED</option><option>DELAYED</option><option>CANCELLED</option></select></label>
+                  <label>Source Basis<input id="f_source_basis" value="User entered" required></label>
+                  <label>Data Class<select id="f_data_class"><option>SYNTHETIC</option><option>PUBLIC_REFERENCE</option></select></label>
+                </div>
+
+                <!-- Icon-based Action Buttons for CRUD operations -->
+                <div class="form-actions-bar">
+                  <!-- Save / Update Icon Button -->
+                  <button type="button" id="saveFlightBtn" class="icon-crud-btn btn-save" title="Save or update flight entry">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    <span id="saveFlightBtnLabel">Save Flight</span>
+                  </button>
+
+                  <!-- Load Active Icon Button -->
+                  <button type="button" id="loadActiveFlightBtn" class="icon-crud-btn btn-load" style="display:none" title="Set this flight as active incident">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                    <span>Load As Active</span>
+                  </button>
+
+                  <!-- Delete Icon Button -->
+                  <button type="button" id="deleteFlightBtn" class="icon-crud-btn btn-delete" style="display:none" title="Delete selected flight record">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    <span>Delete Flight</span>
+                  </button>
+
+                  <!-- Reset / Clear Icon Button -->
+                  <button type="button" id="resetFlightFormBtn" class="icon-crud-btn btn-reset" title="Clear selection and reset form">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    <span>Clear / Deselect</span>
+                  </button>
+
+                  <span id="flightFormMsg" class="form-msg"></span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 5: AUDIT TRAIL
+           ========================================== -->
+      <section id="tab-audit" class="tab-pane">
+        <div class="panel audit-panel">
+          <div class="audit-panel-header">
+            <div>
+              <h2 style="margin:0 0 4px">Audit Trail &amp; Verification Logs</h2>
+              <p class="small" style="margin:0">Complete immutable record of telemetry received, tool actions, SLM responses, and supervisor sign-offs.</p>
+            </div>
+            <div class="audit-header-actions">
+              <button type="button" id="copyAuditBtn" class="icon-crud-btn btn-reset" title="Copy full audit log to clipboard">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy Audit Trail</span>
+              </button>
+            </div>
+          </div>
+          <pre id="audit" class="audit-log-view">No activity loaded yet.</pre>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 6: PIPELINE SIGNAL BOARD (Dedicated View)
+           ========================================== -->
+      <section id="tab-pipeline" class="tab-pane">
+        <div class="pipeline-signal-board">
+          <div class="pipeline-board-header">
+            <div class="board-title">
+              <span class="board-icon">🚥</span>
+              <strong>PIPELINE SIGNAL BOARD</strong>
+            </div>
+            <div class="board-legend">
+              <span class="legend-item"><span class="legend-dot dot-pending"></span> Pending</span>
+              <span class="legend-item"><span class="legend-dot dot-processing"></span> Processing</span>
+              <span class="legend-item"><span class="legend-dot dot-complete"></span> Complete</span>
+              <span class="legend-timer">⏱ <span id="pipelineClockTimer">15.9s</span></span>
+            </div>
+          </div>
+
+          <!-- Interactive Node Graph Flow -->
+          <div class="pipeline-flow-container">
+            <!-- Stage 1: Ingestion & Inbound Gate (Top Row) -->
+            <div class="flow-row flow-row-top">
+              <div class="pipeline-node node-complete">
+                <div class="node-icon">📥</div>
+                <div class="node-title">Telemetry Received</div>
+                <div class="node-sub">ACARS / HTTP In</div>
+                <div class="node-tag" id="pipeAcTag">AC-001</div>
+              </div>
+
+              <div class="flow-arrow">➔</div>
+
+              <div class="pipeline-node node-complete">
+                <div class="node-icon">🧠</div>
+                <div class="node-title">Fault Classifier</div>
+                <div class="node-sub">Intent detect</div>
+                <div class="node-tag" id="pipeClassifierTag">21-47-01</div>
+              </div>
+
+              <div class="flow-arrow">➔</div>
+
+              <div class="pipeline-node node-complete">
+                <div class="node-icon">🔍</div>
+                <div class="node-title">Policy &amp; Gate</div>
+                <div class="node-sub">Permission check</div>
+                <div class="node-tag">Ground Prep</div>
+              </div>
+
+              <div class="flow-arrow">➔</div>
+
+              <div class="pipeline-node node-complete">
+                <div class="node-icon">⚠️</div>
+                <div class="node-title">Path Router</div>
+                <div class="node-sub">Dual-track split</div>
+                <div class="node-tag">SQL &amp; RAG</div>
+              </div>
+            </div>
+
+            <!-- Stage 2: Dual Track Split (Middle Rows) -->
+            <div class="flow-tracks-wrapper">
+              <!-- Track A: SQL / Relational Data Pipeline -->
+              <div class="flow-track track-sql">
+                <div class="track-badge">SQL</div>
+                <div class="track-nodes">
+                  <div class="flow-arrow">➔</div>
+                  <div class="pipeline-node node-complete">
+                    <div class="node-icon">⚙️</div>
+                    <div class="node-title">Schema Matcher</div>
+                    <div class="node-sub">Aircraft / Flight</div>
+                    <div class="node-tag" id="pipeSchemaTag">A350-900</div>
+                  </div>
+                  <div class="flow-arrow">➔</div>
+                  <div class="pipeline-node node-complete">
+                    <div class="node-icon">🗄️</div>
+                    <div class="node-title">DB Query</div>
+                    <div class="node-sub">SQLite MCP</div>
+                    <div class="node-tag" id="pipeDbTag">6 Stations</div>
+                  </div>
+                  <div class="flow-arrow">➔</div>
+                  <div class="pipeline-node node-complete">
+                    <div class="node-icon">📊</div>
+                    <div class="node-title">Constraint Evaluator</div>
+                    <div class="node-sub">Staff, Tools &amp; Lots</div>
+                    <div class="node-tag">126 Lots</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Track B: Lexical FTS5 & SLM RAG Pipeline -->
+              <div class="flow-track track-rag">
+                <div class="track-badge">RAG</div>
+                <div class="track-nodes">
+                  <div class="flow-arrow">➔</div>
+                  <div class="pipeline-node node-complete">
+                    <div class="node-icon">🗂️</div>
+                    <div class="node-title">FTS5 Ingestion</div>
+                    <div class="node-sub">Document Chunks</div>
+                    <div class="node-tag">47 Chunks</div>
+                  </div>
+                  <div class="flow-arrow">➔</div>
+                  <div class="pipeline-node node-complete">
+                    <div class="node-icon">🔎</div>
+                    <div class="node-title">Lexical BM25 Search</div>
+                    <div class="node-sub">FTS5 Match</div>
+                    <div class="node-tag">SOP / MEL / WO</div>
+                  </div>
+                  <div class="flow-arrow">➔</div>
+                  <div class="pipeline-node node-complete">
+                    <div class="node-icon">📚</div>
+                    <div class="node-title">Context Assembly</div>
+                    <div class="node-sub">Metadata Filter</div>
+                    <div class="node-tag" id="pipeDocsTag">10 Docs</div>
+                  </div>
+                  <div class="flow-arrow">➔</div>
+                  <div class="pipeline-node node-complete">
+                    <div class="node-icon">✨</div>
+                    <div class="node-title">SLM Reasoner</div>
+                    <div class="node-sub">qwen2.5:3b / Replay</div>
+                    <div class="node-tag" id="pipeModelTag">Reference</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stage 3: Convergence & Response (Bottom) -->
+            <div class="flow-row flow-row-bottom">
+              <div class="pipeline-node node-response node-complete">
+                <div class="node-icon">✅</div>
+                <div class="node-title">Response Ready</div>
+                <div class="node-sub">4 Options &amp; Verified Citations</div>
+                <div class="node-tag" id="pipePlanHashTag">SHA-256 Verified</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Log Section -->
+          <div class="pipeline-activity-section">
+            <div class="activity-log-title">ACTIVITY LOG</div>
+            <div class="pipeline-log-terminal" id="pipelineActivityLog">
+              <div class="log-line"><span class="log-ts">18:28:10</span> <span class="log-ok">✓</span> <span class="log-comp">Telemetry Ingestion</span> <span class="log-dim">—</span> <span class="log-msg">Inbound flight AC-001 DXB➔FRA received</span></div>
+              <div class="log-line"><span class="log-ts">18:28:11</span> <span class="log-ok">✓</span> <span class="log-comp">Policy Gate</span> <span class="log-dim">—</span> <span class="log-msg">Planning status: ENABLED (Scope: GROUND_PREPARATION_ONLY)</span></div>
+              <div class="log-line"><span class="log-ts">18:28:12</span> <span class="log-ok">✓</span> <span class="log-comp">FTS5 Lexical Search</span> <span class="log-dim">—</span> <span class="log-msg">Matched 10 applicable documents (SIM-PROC-21-R3, SIM-MEL-21-R2, SIM-SOP-REC-R1)</span></div>
+              <div class="log-line"><span class="log-ts">18:28:13</span> <span class="log-ok">✓</span> <span class="log-comp">DB Query</span> <span class="log-dim">—</span> <span class="log-msg">Evaluated inventory across 6 stations; FRA quarantined (0 usable), AMS serviceable (1 usable)</span></div>
+              <div class="log-line"><span class="log-ts">18:28:14</span> <span class="log-ok">✓</span> <span class="log-comp">Staff &amp; Tool Validator</span> <span class="log-dim">—</span> <span class="log-msg">Selected qualified technician ENG-FRA-01 &amp; calibrated TOOL-FRA-01</span></div>
+              <div class="log-line"><span class="log-ts">18:28:15</span> <span class="log-ok">✓</span> <span class="log-comp">Recovery Formatter</span> <span class="log-dim">—</span> <span class="log-msg">Synthesized Option A (Inspect), B (MEL), C (Logistics), D (Swap Referral)</span></div>
+              <div class="log-line"><span class="log-ts">18:28:15</span> <span class="log-ok">✓</span> <span class="log-comp">Response Ready</span> <span class="log-dim">—</span> <span class="log-msg">Cryptographic plan hash generated; citations linked to evidence cards</span></div>
+            </div>
+          </div>
+
+          <!-- Bottom Track Answer Banner -->
+          <div class="pipeline-track-banner" id="pipelineStatusBanner">
+            <span class="banner-bolt">⚡</span>
+            <span>Query was answered via the <strong>Dual-Track SQL (SQLite Database) + Lexical FTS5 Retrieval</strong> pipeline</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 7: EVIDENCE & CITATIONS (Photo 4 Elements)
+           ========================================== -->
+      <section id="tab-evidence" class="tab-pane">
+        <div class="panel">
+          <div class="evidence-header-row">
+            <div>
+              <h2>Evidence &amp; document citations</h2>
+              <p class="small" style="margin:0">Standard operating procedures, task manuals, and historical work packages verified by the system.</p>
+            </div>
+          </div>
+          <div id="evidence" class="evidence-grid" style="margin-top:16px;"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Global Footer -->
+    <footer>
+      Simulation date: 14 September 2026 | UTC stored internally | Scenario clock is not the real clock | No external notifications or bookings are sent.
+    </footer>
+  </div>
+</div>
+
+<!-- Citation & Evidence Detail Modal Dialog -->
+<div id="citationModal" class="citation-modal" hidden>
+  <div class="citation-modal-backdrop" id="citationModalBackdrop"></div>
+  <div class="citation-modal-content" role="dialog" aria-modal="true" aria-labelledby="citationModalTitle">
+    <div class="citation-modal-header">
+      <div>
+        <div class="eyebrow" id="citationModalEyebrow">EVIDENCE &amp; CITATION TRACE</div>
+        <h3 id="citationModalTitle">Document Citations</h3>
+      </div>
+      <button type="button" class="close-modal-btn" id="closeCitationModalBtn" title="Close modal (Esc)">✕</button>
+    </div>
+    <div id="citationModalSubtitle" class="citation-modal-subtitle">Supporting documents, procedural rules, and evidence items used to formulate this output:</div>
+    <div id="citationList" class="citation-list"></div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

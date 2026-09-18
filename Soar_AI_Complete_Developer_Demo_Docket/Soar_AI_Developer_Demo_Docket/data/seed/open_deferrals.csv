@@ -1,0 +1,7 @@
+deferral_id,aircraft_id,review_reference,description,recorded_at,expires_at,status,interaction_review_required,data_class
+DEF-001,AC-001,SIM-MEL-REVIEW-001,Fictional previously recorded cabin item; cross-item assessment remains with authorized personnel.,2026-09-13T08:00:00Z,2026-09-16T08:00:00Z,OPEN,1,SYNTHETIC
+DEF-002,AC-002,SIM-MEL-REVIEW-002,Fictional previously recorded cabin item; cross-item assessment remains with authorized personnel.,2026-09-13T08:00:00Z,2026-09-16T08:00:00Z,OPEN,1,SYNTHETIC
+DEF-003,AC-003,SIM-MEL-REVIEW-003,Fictional previously recorded cabin item; cross-item assessment remains with authorized personnel.,2026-09-13T08:00:00Z,2026-09-16T08:00:00Z,OPEN,1,SYNTHETIC
+DEF-004,AC-004,SIM-MEL-REVIEW-004,Fictional previously recorded cabin item; cross-item assessment remains with authorized personnel.,2026-09-13T08:00:00Z,2026-09-16T08:00:00Z,OPEN,1,SYNTHETIC
+DEF-005,AC-005,SIM-MEL-REVIEW-005,Fictional previously recorded cabin item; cross-item assessment remains with authorized personnel.,2026-09-13T08:00:00Z,2026-09-16T08:00:00Z,OPEN,1,SYNTHETIC
+DEF-006,AC-006,SIM-MEL-REVIEW-006,Fictional previously recorded cabin item; cross-item assessment remains with authorized personnel.,2026-09-13T08:00:00Z,2026-09-16T08:00:00Z,OPEN,1,SYNTHETIC

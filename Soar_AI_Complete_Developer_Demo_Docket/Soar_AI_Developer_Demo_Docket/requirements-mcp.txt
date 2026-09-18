@@ -1,0 +1,4 @@
+# Optional integration, not installed or executed in the packaged validation.
+# Resolve an organization-approved official SDK version, then freeze that environment.
+mcp
+httpx==0.28.1

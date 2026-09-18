@@ -1,0 +1,18 @@
+{
+  "scenario_id": "stale_inventory",
+  "name": "Stale AMS inventory",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {},
+  "overrides": [
+    {
+      "table": "inventory_lots",
+      "key": "LOT-AMS-CZT-1",
+      "values": {
+        "last_verified_at": "2026-09-13T10:00:00Z"
+      }
+    }
+  ],
+  "description": "AMS rejected; CDG selected as later contingency",
+  "expected": "AMS rejected; CDG selected as later contingency"
+}

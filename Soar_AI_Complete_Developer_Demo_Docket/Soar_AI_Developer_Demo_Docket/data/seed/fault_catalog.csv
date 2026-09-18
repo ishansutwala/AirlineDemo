@@ -1,0 +1,7 @@
+fault_code,ata_chapter,description,part_id,scope_note,data_class
+DEMO-A350-21-047,21,Intermittent cabin-zone temperature indication,DEMO-CZT-100,Invented event for ground-planning simulation; no real warning mapping or flight-safety classification.,SYNTHETIC
+DEMO-33-012,33,Passenger reading light intermittent,DEMO-PART-004,Invented event for ground-planning simulation; no real warning mapping or flight-safety classification.,SYNTHETIC
+DEMO-25-019,25,Seat control panel unresponsive,DEMO-PART-005,Invented event for ground-planning simulation; no real warning mapping or flight-safety classification.,SYNTHETIC
+DEMO-44-018,44,Cabin display data intermittent,DEMO-PART-003,Invented event for ground-planning simulation; no real warning mapping or flight-safety classification.,SYNTHETIC
+DEMO-25-027,25,Galley status display indication,DEMO-PART-006,Invented event for ground-planning simulation; no real warning mapping or flight-safety classification.,SYNTHETIC
+DEMO-44-031,44,IFE interface intermittent,DEMO-PART-011,Invented event for ground-planning simulation; no real warning mapping or flight-safety classification.,SYNTHETIC

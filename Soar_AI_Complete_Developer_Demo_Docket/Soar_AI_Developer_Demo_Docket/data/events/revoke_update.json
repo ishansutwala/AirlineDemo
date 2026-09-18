@@ -1,0 +1,8 @@
+{
+  "event_id": "EVT-20260914-0001",
+  "source_sequence": 2,
+  "planning_authorization": {
+    "status": "REVOKED"
+  },
+  "note": "Invalidate plan and release unused holds."
+}

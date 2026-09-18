@@ -1,0 +1,53 @@
+{
+  "scenario_id": "no_serviceable_parts",
+  "name": "All hero parts unavailable",
+  "clock_utc": "2026-09-14T06:15:00Z",
+  "event_file": "data/events/nominal.json",
+  "event_patch": {},
+  "overrides": [
+    {
+      "table": "inventory_lots",
+      "key": "LOT-FRA-CZT-Q",
+      "values": {
+        "condition": "QUARANTINE"
+      }
+    },
+    {
+      "table": "inventory_lots",
+      "key": "LOT-AMS-CZT-1",
+      "values": {
+        "condition": "QUARANTINE"
+      }
+    },
+    {
+      "table": "inventory_lots",
+      "key": "LOT-CDG-CZT-1",
+      "values": {
+        "condition": "QUARANTINE"
+      }
+    },
+    {
+      "table": "inventory_lots",
+      "key": "LOT-DXB-CZT-1",
+      "values": {
+        "condition": "QUARANTINE"
+      }
+    },
+    {
+      "table": "inventory_lots",
+      "key": "LOT-VIE-CZT-P",
+      "values": {
+        "condition": "QUARANTINE"
+      }
+    },
+    {
+      "table": "inventory_lots",
+      "key": "LOT-LHR-CZT-U",
+      "values": {
+        "condition": "QUARANTINE"
+      }
+    }
+  ],
+  "description": "No component contingency; inspection preparation can still proceed without claiming a repair is assured",
+  "expected": "No component contingency; inspection preparation can still proceed without claiming a repair is assured"
+}

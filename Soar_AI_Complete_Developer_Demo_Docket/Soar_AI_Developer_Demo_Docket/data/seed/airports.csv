@@ -1,0 +1,13 @@
+iata,icao,name,city,country,latitude,longitude,timezone,source_url,data_class
+DXB,OMDB,Dubai International Airport,Dubai,AE,25.24979,55.370992,Asia/Dubai,https://ourairports.com/airports/OMDB/,PUBLIC_REFERENCE
+FRA,EDDF,Frankfurt Main Airport,Frankfurt,DE,50.026706,8.55835,Europe/Berlin,https://ourairports.com/airports/EDDF/,PUBLIC_REFERENCE
+AMS,EHAM,Amsterdam Airport Schiphol,Amsterdam,NL,52.308601,4.76389,Europe/Amsterdam,https://ourairports.com/airports/EHAM/,PUBLIC_REFERENCE
+CDG,LFPG,Charles de Gaulle International Airport,Paris,FR,49.00896,2.554117,Europe/Paris,https://ourairports.com/airports/LFPG/,PUBLIC_REFERENCE
+MUC,EDDM,Munich Airport,Munich,DE,48.353802,11.7861,Europe/Berlin,https://ourairports.com/airports/EDDM/,PUBLIC_REFERENCE
+VIE,LOWW,Vienna International Airport,Vienna,AT,48.110298,16.5697,Europe/Vienna,https://ourairports.com/airports/LOWW/,PUBLIC_REFERENCE
+LHR,EGLL,London Heathrow Airport,London,GB,51.470748,-0.459909,Europe/London,https://ourairports.com/airports/EGLL/,PUBLIC_REFERENCE
+FCO,LIRF,Rome-Fiumicino Leonardo da Vinci International Airport,Rome,IT,41.804532,12.251998,Europe/Rome,https://ourairports.com/airports/LIRF/,PUBLIC_REFERENCE
+DOH,OTHH,Hamad International Airport,Doha,QA,25.273056,51.608056,Asia/Qatar,https://ourairports.com/airports/OTHH/,PUBLIC_REFERENCE
+AUH,OMAA,Zayed International Airport,Abu Dhabi,AE,24.440966,54.649237,Asia/Dubai,https://ourairports.com/airports/OMAA/,PUBLIC_REFERENCE
+ZRH,LSZH,Zurich Airport,Zurich,CH,47.458056,8.548056,Europe/Zurich,https://ourairports.com/airports/LSZH/,PUBLIC_REFERENCE
+BRU,EBBR,Brussels Airport,Brussels,BE,50.901402,4.48444,Europe/Brussels,https://ourairports.com/airports/EBBR/,PUBLIC_REFERENCE

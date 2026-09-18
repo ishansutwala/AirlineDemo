@@ -1,0 +1,3 @@
+reportlab
+python-docx
+# Optional PDF/DOCX regeneration only; not required to run the supplied demo.

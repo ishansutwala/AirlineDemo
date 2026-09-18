@@ -1,0 +1,30 @@
+flowchart TB
+  subgraph ExistingAircraft[Existing aircraft and flight crew - OUTSIDE AI]
+    A[Aircraft systems and health events]
+    P[Flight crew and established flight procedures]
+  end
+  A --> G[Existing aircraft communications / ground health platform]
+  G --> MCC[Maintenance Control: ground preparation authorization]
+  subgraph GroundPrivate[Airline-controlled ground environment]
+    I[Validated event adapter + policy gate]
+    W[Bounded recovery workflow]
+    M[Local SLM: searches and cited briefing]
+    R[Current authorized document retrieval]
+    T[Read adapters: history / parts / staff / tools / rotations]
+    C[Deterministic constraints and timing]
+    AP[Versioned preparation approval gateway]
+    D[(Case, evidence and audit store)]
+    O[Simulated outbox and reversible hold]
+    I --> W
+    W <--> M
+    W --> R
+    W --> T
+    W --> C
+    W --> D
+    AP --> O
+    AP --> D
+  end
+  MCC --> I
+  W --> H[Human review - APPROVE PREPARATION]
+  H --> AP
+  E[External maintenance completion AFTER arrival] --> D

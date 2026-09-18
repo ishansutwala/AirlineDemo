@@ -1,0 +1,7 @@
+{
+  "source_system": "SIMULATED_MAINTENANCE_SYSTEM",
+  "external_reference": "SIM-RELEASE-001",
+  "status": "SERVICEABLE_RECORDED_EXTERNALLY",
+  "recorded_at": "2026-09-14T07:35:00Z",
+  "note": "Externally simulated authorized maintenance completion. No part consumed. This is not an AI release."
+}

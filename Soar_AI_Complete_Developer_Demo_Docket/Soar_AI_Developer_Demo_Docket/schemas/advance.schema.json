@@ -1,0 +1,14 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "clock_utc": {
+      "title": "Clock Utc",
+      "type": "string"
+    }
+  },
+  "required": [
+    "clock_utc"
+  ],
+  "title": "Advance",
+  "type": "object"
+}
