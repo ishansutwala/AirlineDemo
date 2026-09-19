@@ -109,14 +109,9 @@
       </div>
     </header>
 
-    <!-- Global Disclaimer Banner -->
-    <div class="disclaimer">
-      FICTIONAL AIRLINE DATA. Real route reference; no real incident, dispatch permission, maintenance instruction or airline endorsement.
-    </div>
-
     <!-- Global Messages (Error / Notice) -->
     <div id="error" class="error" hidden></div>
-    <div id="notice" class="notice">Choose SIMULATOR and load a scenario. Then choose MCC to analyze and approve. Sample local personas are not production authentication.</div>
+    <div id="notice" class="notice" hidden></div>
 
     <main class="page-content">
       <!-- ==========================================
@@ -127,29 +122,26 @@
         <div class="controls">
           <label>Demo persona
             <select id="role">
-              <option>MCC</option>
-              <option>SIMULATOR</option>
-              <option>OCC</option>
-              <option>VIEWER</option>
+              <option value="SIMULATOR" selected>SIMULATOR</option>
+              <option value="MCC">MCC</option>
             </select>
-          </label>
-          <label>Token override (optional)
-            <input id="tokenOverride" type="password" placeholder="Uses sample persona token" autocomplete="off">
           </label>
           <label>Scenario
             <select id="scenario"></select>
           </label>
-          <label>Inference
+          <label id="inferenceGroup" style="display: none;">Inference
             <select id="mode">
-              <option value="reference">Reference replay - NO AI inference</option>
-              <option value="ollama">Live local SLM via Ollama</option>
+              <option value="ollama">With SLM</option>
+              <option value="reference">Without SLM</option>
             </select>
           </label>
-          <div class="control-actions">
-            <button type="button" id="load">Load / reset fixture</button>
-            <button type="button" id="analyze">Prepare recovery plan</button>
-            <button type="button" id="approve">Approve preparation</button>
-          </div>
+          <button type="button" id="load">Load / reset fixture</button>
+          <button type="button" id="analyze">Prepare recovery plan</button>
+          <button type="button" id="approve">Approve preparation</button>
+          <button type="button" id="visualFlowBtn" class="btn-visual-flow" title="View interactive visual data pipeline flow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Visual Flow
+          </button>
         </div>
 
         <!-- Hero Card (Flight Overview) -->
@@ -168,75 +160,88 @@
           </div>
           <div class="metrics">
             <div>
-              <strong id="clock">08:15</strong>
+              <strong id="clock">--:--</strong>
               <span id="clockLabel">Scenario clock</span>
             </div>
             <div>
-              <strong id="remaining">35</strong>
+              <strong id="remaining">--</strong>
               <span>Minutes to stand</span>
             </div>
             <div>
-              <strong id="heroNextDep">11:00</strong>
+              <strong id="heroNextDep">--:--</strong>
               <span>Scheduled next departure</span>
             </div>
           </div>
         </div>
 
-        <!-- Status Line -->
+        <!-- System State Bar -->
         <div class="statusline">
-          <span id="state">NOT STARTED</span>
-          <span id="inference">No inference performed</span>
-          <span id="retrieval">No retrieval performed</span>
+          <div><span class="status-dot"></span> State: <strong id="state">IDLE</strong></div>
+          <div id="countdown">No case loaded. Click "Load / reset fixture" to begin.</div>
         </div>
 
-        <!-- Incoming event and ground permission panel -->
+        <!-- Event Description Panel -->
         <div class="panel">
-          <h2>Incoming event and ground permission</h2>
-          <div id="eventDetails">No maintenance event loaded.</div>
+          <h2>Inbound telemetry &amp; fault report</h2>
+          <div id="event">
+            <div id="eventDetails">Click "Load / reset fixture" to load scenario and telemetry.</div>
+          </div>
         </div>
       </section>
 
       <!-- ==========================================
-           TAB 2: RECOVERY AND BRIEFING (Photo 2 Elements)
+           TAB 2: RECOVERY & BRIEFING
            ========================================== -->
       <section id="tab-recovery" class="tab-pane">
-        <div class="grid">
-          <!-- Left: Recovery Options -->
-          <div class="panel">
-            <h2>Recovery options</h2>
-            <div id="gaps"></div>
-            <div id="options" class="empty">Load a case, then prepare the plan.</div>
+        <div class="recovery-workspace-split">
+          <!-- Left Column: 4 Recovery Options (Vertical Stack) -->
+          <div class="recovery-options-col">
+            <div class="options" id="options">
+              <div class="panel empty-options-card">
+                <h2 style="margin: 0 0 8px;">Recovery Options</h2>
+                <p class="small" style="margin: 0; color: var(--muted);">No recovery plan generated yet. Select a scenario and click <strong>Prepare recovery plan</strong> in the Flight Simulator tab.</p>
+              </div>
+            </div>
           </div>
 
-          <!-- Right: Preparation Briefing -->
-          <div class="panel">
-            <h2>Preparation briefing</h2>
-            <div id="brief" class="empty">The model never classifies flight safety or approves release.</div>
-            <div id="modelClaims"></div>
-            <h3>Read workflow</h3>
-            <div id="trace"></div>
-            <h3>Approval &amp; simulated actions</h3>
-            <div id="actions"></div>
+          <!-- Right Column: Preparation Briefing & Trace (Vertical Stack) -->
+          <div class="recovery-side-col">
+            <div class="panel">
+              <h2 style="margin: 0 0 10px;">Preparation briefing</h2>
+              <div id="explanation">
+                <div id="modelClaims"></div>
+              </div>
+              <div id="gaps" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="panel">
+              <h2 style="margin: 0 0 10px;">Deterministic resource trace</h2>
+              <div id="trace"></div>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- ==========================================
-           TAB 3: MATERIAL AND STAFF (Photo 3 Elements)
+           TAB 3: MATERIAL & STAFF
            ========================================== -->
       <section id="tab-materials" class="tab-pane">
         <div class="grid">
-          <!-- Left: Material availability -->
           <div class="panel">
-            <h2>Material availability</h2>
-            <div id="parts" class="empty">Shows usable stock, not just physical count.</div>
+            <h2>Serviceable inventory &amp; constraints</h2>
+            <div id="parts"></div>
           </div>
+          <div class="panel">
+            <h2>Authorized staff, tools &amp; history</h2>
+            <div id="resources"></div>
+          </div>
+        </div>
 
-          <!-- Right: People, tooling & historical context -->
-          <div class="panel">
-            <h2>People, tooling &amp; historical context</h2>
-            <div id="resources" class="empty">Task authorization, current calibration and source timestamps.</div>
+        <div class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 style="margin: 0;">Reservation &amp; Outbox Status</h2>
           </div>
+          <div id="actions"></div>
         </div>
       </section>
 
@@ -244,36 +249,36 @@
            TAB 4: ADDITIONAL FLIGHTS (Photo 5 Elements with Icons)
            ========================================== -->
       <section id="tab-flights" class="tab-pane">
-        <!-- External Event Simulator (Simulator controls) -->
-        <div class="panel simulator">
-          <h2>External event simulator</h2>
-          <p>SIMULATOR persona only. These controls represent external airline-system messages, never SLM actions.</p>
-          <div class="buttons">
-            <button type="button" id="ready">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Advance to 08:30 CEST
-            </button>
-            <button type="button" id="land">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Arrive at stand: 08:50 CEST
-            </button>
-            <button type="button" id="outcome">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              Record external completion: 09:35 CEST
-            </button>
-            <button type="button" id="revoke">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-              Revoke planning permission
-            </button>
-            <button type="button" id="divert">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
-              Report diversion to VIE
-            </button>
-            <button type="button" id="export">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Export evidence JSON
+        <!-- Sleek Single-Line Compact Bar in Tab 4 -->
+        <div class="compact-simulator-bar">
+          <div class="sim-bar-label">
+            <span>External Timeline &amp; Disruption:</span>
+          </div>
+          <div class="sim-bar-controls">
+            <select id="externalEventSelectTab" class="compact-event-select">
+              <option value="" disabled selected>-- Choose event to run --</option>
+              <option value="ready">⏱ Advance timeline to 08:30 CEST (In-flight evaluation)</option>
+              <option value="land">🛬 Arrive at stand: 08:50 CEST (On-stand state)</option>
+              <option value="outcome">✅ Record external completion: 09:35 CEST (Serviceable / Closed)</option>
+              <option value="revoke">⛔ Revoke planning permission (Suspend preparation)</option>
+              <option value="divert">✈️ Report flight diversion to VIE (Vienna divert)</option>
+              <option value="export">📦 Export evidence JSON (Audit package download)</option>
+            </select>
+            <button type="button" id="executeExternalEventBtnTab" class="btn-event-run">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Run
             </button>
           </div>
+        </div>
+
+        <!-- Hidden button handles to preserve direct programmatic triggers -->
+        <div style="display: none;">
+          <button type="button" id="ready">Advance</button>
+          <button type="button" id="land">Land</button>
+          <button type="button" id="outcome">Outcome</button>
+          <button type="button" id="revoke">Revoke</button>
+          <button type="button" id="divert">Divert</button>
+          <button type="button" id="export">Export</button>
         </div>
 
         <!-- Flight Schedule & Fleet Operations Table + CRUD with ICON buttons -->
@@ -407,6 +412,9 @@
       <!-- ==========================================
            TAB 6: PIPELINE SIGNAL BOARD (Dedicated View)
            ========================================== -->
+      <!-- ==========================================
+           TAB 6: PIPELINE SIGNAL BOARD (Dedicated View)
+           ========================================== -->
       <section id="tab-pipeline" class="tab-pane">
         <div class="pipeline-signal-board">
           <div class="pipeline-board-header">
@@ -414,125 +422,208 @@
               <span class="board-icon">🚥</span>
               <strong>PIPELINE SIGNAL BOARD</strong>
             </div>
+
+            <!-- Mode Selector Switcher on Pipeline Board -->
+            <div class="pipeline-mode-switcher">
+              <button type="button" class="pipe-mode-btn active" id="pipeBtnInference" data-mode="ollama">
+                <span class="pipe-mode-icon">✨</span>
+                <span>With Inference (Live Local SLM)</span>
+              </button>
+              <button type="button" class="pipe-mode-btn" id="pipeBtnReference" data-mode="reference">
+                <span class="pipe-mode-icon">⚙️</span>
+                <span>Without Inference (Reference Replay)</span>
+              </button>
+            </div>
+
             <div class="board-legend">
               <span class="legend-item"><span class="legend-dot dot-pending"></span> Pending</span>
               <span class="legend-item"><span class="legend-dot dot-processing"></span> Processing</span>
               <span class="legend-item"><span class="legend-dot dot-complete"></span> Complete</span>
-              <span class="legend-timer">⏱ <span id="pipelineClockTimer">15.9s</span></span>
+              <span class="legend-timer">⏱ <span id="pipelineClockTimer">0.0s</span></span>
             </div>
           </div>
 
           <!-- Interactive Node Graph Flow -->
           <div class="pipeline-flow-container">
             <!-- Stage 1: Ingestion & Inbound Gate (Top Row) -->
+            <div class="flow-stage-header">
+              <span class="stage-num">STAGE 1</span>
+              <span class="stage-label">INGESTION &amp; GOVERNANCE</span>
+            </div>
+            
             <div class="flow-row flow-row-top">
-              <div class="pipeline-node node-complete">
+              <div class="pipeline-node node-complete" title="Receives inbound flight telemetry &amp; fault report via ACARS/API">
                 <div class="node-icon">📥</div>
-                <div class="node-title">Telemetry Received</div>
-                <div class="node-sub">ACARS / HTTP In</div>
+                <div class="node-title">Telemetry Ingestion</div>
+                <div class="node-sub">get_event &amp; rotation</div>
                 <div class="node-tag" id="pipeAcTag">AC-001</div>
               </div>
 
               <div class="flow-arrow">➔</div>
 
-              <div class="pipeline-node node-complete">
-                <div class="node-icon">🧠</div>
-                <div class="node-title">Fault Classifier</div>
-                <div class="node-sub">Intent detect</div>
+              <div class="pipeline-node node-complete" title="Deterministic fault catalog &amp; task requirement matching">
+                <div class="node-icon">🏷️</div>
+                <div class="node-title">Fault Catalog Match</div>
+                <div class="node-sub">Task &amp; Effectivity</div>
                 <div class="node-tag" id="pipeClassifierTag">21-47-01</div>
               </div>
 
               <div class="flow-arrow">➔</div>
 
-              <div class="pipeline-node node-complete">
-                <div class="node-icon">🔍</div>
+              <div class="pipeline-node node-complete" title="Validates planning authority, time window, and safety boundaries">
+                <div class="node-icon">🛡️</div>
                 <div class="node-title">Policy &amp; Gate</div>
-                <div class="node-sub">Permission check</div>
-                <div class="node-tag">Ground Prep</div>
-              </div>
-
-              <div class="flow-arrow">➔</div>
-
-              <div class="pipeline-node node-complete">
-                <div class="node-icon">⚠️</div>
-                <div class="node-title">Path Router</div>
-                <div class="node-sub">Dual-track split</div>
-                <div class="node-tag">SQL &amp; RAG</div>
+                <div class="node-sub">Scope &amp; Validity Check</div>
+                <div class="node-tag" id="pipeGateTag">Ground Prep</div>
               </div>
             </div>
 
-            <!-- Stage 2: Dual Track Split (Middle Rows) -->
-            <div class="flow-tracks-wrapper">
-              <!-- Track A: SQL / Relational Data Pipeline -->
-              <div class="flow-track track-sql">
-                <div class="track-badge">SQL</div>
-                <div class="track-nodes">
-                  <div class="flow-arrow">➔</div>
-                  <div class="pipeline-node node-complete">
-                    <div class="node-icon">⚙️</div>
-                    <div class="node-title">Schema Matcher</div>
-                    <div class="node-sub">Aircraft / Flight</div>
-                    <div class="node-tag" id="pipeSchemaTag">A350-900</div>
-                  </div>
-                  <div class="flow-arrow">➔</div>
-                  <div class="pipeline-node node-complete">
-                    <div class="node-icon">🗄️</div>
-                    <div class="node-title">DB Query</div>
-                    <div class="node-sub">SQLite MCP</div>
-                    <div class="node-tag" id="pipeDbTag">6 Stations</div>
-                  </div>
-                  <div class="flow-arrow">➔</div>
-                  <div class="pipeline-node node-complete">
-                    <div class="node-icon">📊</div>
-                    <div class="node-title">Constraint Evaluator</div>
-                    <div class="node-sub">Staff, Tools &amp; Lots</div>
-                    <div class="node-tag">126 Lots</div>
-                  </div>
-                </div>
-              </div>
+            <div class="flow-down-arrow">▼</div>
 
-              <!-- Track B: Lexical FTS5 & SLM RAG Pipeline -->
-              <div class="flow-track track-rag">
-                <div class="track-badge">RAG</div>
+            <!-- Stage 2: Processing Core with Dual Path Visualization -->
+            <div class="flow-stage-header">
+              <span class="stage-num">STAGE 2</span>
+              <span class="stage-label">RETRIEVAL &amp; CONSTRAINT REASONING</span>
+            </div>
+            
+            <div class="flow-tracks-wrapper" id="pipelineTracksWrapper">
+              
+              <!-- Track 1: Search Formulation (Inference vs Rule-Based) -->
+              <div class="flow-track track-query-formulation">
+                <div class="track-header">
+                  <span class="track-title-badge" id="pipeQueryTrackBadge">SEARCH QUERY FORMULATION</span>
+                  <span class="track-mode-indicator" id="pipeQueryModeText">With Inference (SLM Search Planner)</span>
+                </div>
                 <div class="track-nodes">
-                  <div class="flow-arrow">➔</div>
-                  <div class="pipeline-node node-complete">
-                    <div class="node-icon">🗂️</div>
-                    <div class="node-title">FTS5 Ingestion</div>
-                    <div class="node-sub">Document Chunks</div>
-                    <div class="node-tag">47 Chunks</div>
+                  <!-- Node for With Inference -->
+                  <div class="pipeline-node node-complete node-inference-only" id="nodeSlmPlanner">
+                    <div class="node-icon">✨</div>
+                    <div class="node-title">SLM Search Planner</div>
+                    <div class="node-sub">Ollama qwen2.5:7b</div>
+                    <div class="node-tag" id="pipePlannerTag">Domain Queries</div>
                   </div>
-                  <div class="flow-arrow">➔</div>
-                  <div class="pipeline-node node-complete">
-                    <div class="node-icon">🔎</div>
-                    <div class="node-title">Lexical BM25 Search</div>
-                    <div class="node-sub">FTS5 Match</div>
-                    <div class="node-tag">SOP / MEL / WO</div>
+
+                  <!-- Node for Without Inference -->
+                  <div class="pipeline-node node-complete node-reference-only" id="nodeRefQuery" style="display:none;">
+                    <div class="node-icon">📋</div>
+                    <div class="node-title">Deterministic Query</div>
+                    <div class="node-sub">Static Template</div>
+                    <div class="node-tag">Hardcoded</div>
                   </div>
+
                   <div class="flow-arrow">➔</div>
-                  <div class="pipeline-node node-complete">
+
+                  <!-- Technical Document Retrieval -->
+                  <div class="pipeline-node node-complete" id="nodeDocRetrieval">
                     <div class="node-icon">📚</div>
-                    <div class="node-title">Context Assembly</div>
-                    <div class="node-sub">Metadata Filter</div>
+                    <div class="node-title">Document Retrieval</div>
+                    <div class="node-sub">SOPs / MEL / Manuals</div>
                     <div class="node-tag" id="pipeDocsTag">10 Docs</div>
                   </div>
+                </div>
+              </div>
+
+              <!-- Track 2: Deterministic Operational Constraints Engine -->
+              <div class="flow-track track-constraints">
+                <div class="track-header">
+                  <span class="track-title-badge">DETERMINISTIC OPERATIONAL CONSTRAINTS</span>
+                  <span class="track-mode-indicator">Active in both modes</span>
+                </div>
+                <div class="track-nodes">
+                  <div class="pipeline-node node-complete" title="Validates lot serviceability, release docs, shelf life &amp; reservations">
+                    <div class="node-icon">📦</div>
+                    <div class="node-title">Inventory Validator</div>
+                    <div class="node-sub">Lot &amp; Release Status</div>
+                    <div class="node-tag" id="pipeDbTag">6 Stations</div>
+                  </div>
+
                   <div class="flow-arrow">➔</div>
-                  <div class="pipeline-node node-complete">
-                    <div class="node-icon">✨</div>
-                    <div class="node-title">SLM Reasoner</div>
-                    <div class="node-sub">qwen2.5:3b / Replay</div>
-                    <div class="node-tag" id="pipeModelTag">Reference</div>
+
+                  <div class="pipeline-node node-complete" title="Checks engineer certifications, ratings, and shift overlap">
+                    <div class="node-icon">👷</div>
+                    <div class="node-title">Staff &amp; Shift Matcher</div>
+                    <div class="node-sub">Ratings &amp; Duty Windows</div>
+                    <div class="node-tag" id="pipeEngTag">ENG-FRA-01</div>
+                  </div>
+
+                  <div class="flow-arrow">➔</div>
+
+                  <div class="pipeline-node node-complete" title="Checks tooling asset serviceability and calibration dates">
+                    <div class="node-icon">🔧</div>
+                    <div class="node-title">Tooling &amp; Calibration</div>
+                    <div class="node-sub">Asset Calibration Check</div>
+                    <div class="node-tag" id="pipeToolTag">TOOL-FRA-01</div>
+                  </div>
+
+                  <div class="flow-arrow">➔</div>
+
+                  <div class="pipeline-node node-complete" title="Evaluates logistics transit, pickup cutoffs &amp; customs">
+                    <div class="node-icon">🚚</div>
+                    <div class="node-title">Logistics Quotes</div>
+                    <div class="node-sub">Transit &amp; Cutoff Windows</div>
+                    <div class="node-tag" id="pipeLogisticsTag">5 Quotes</div>
+                  </div>
+
+                  <div class="flow-arrow">➔</div>
+
+                  <div class="pipeline-node node-complete" title="Evaluates spare aircraft availability and compatibility">
+                    <div class="node-icon">✈️</div>
+                    <div class="node-title">Fleet Swap Evaluator</div>
+                    <div class="node-sub">Tail &amp; Crew Check</div>
+                    <div class="node-tag" id="pipeSwapTag">11 Aircraft</div>
                   </div>
                 </div>
               </div>
+
+              <!-- Track 3: Plan Calculation & Briefing Synthesis -->
+              <div class="flow-track track-synthesis">
+                <div class="track-header">
+                  <span class="track-title-badge">PLAN SYNTHESIS &amp; BRIEFING</span>
+                  <span class="track-mode-indicator" id="pipeSynthesisModeText">With Inference (SLM Citation Validator)</span>
+                </div>
+                <div class="track-nodes">
+                  <!-- 4-Branch Options Calculator -->
+                  <div class="pipeline-node node-complete" title="Synthesizes deterministic recovery branches (A, B, C, D)">
+                    <div class="node-icon">🔀</div>
+                    <div class="node-title">4-Branch Calculator</div>
+                    <div class="node-sub">Options A, B, C, D</div>
+                    <div class="node-tag">4 Options</div>
+                  </div>
+
+                  <div class="flow-arrow">➔</div>
+
+                  <!-- Briefing Synthesis Node: Inference vs Reference -->
+                  <div class="pipeline-node node-complete node-inference-only" id="nodeSlmBriefing">
+                    <div class="node-icon">🧠</div>
+                    <div class="node-title">SLM Briefing &amp; Citations</div>
+                    <div class="node-sub">Strict Citation Validation</div>
+                    <div class="node-tag" id="pipeModelTag">Live Ollama</div>
+                  </div>
+
+                  <div class="pipeline-node node-complete node-reference-only" id="nodeRefBriefing" style="display:none;">
+                    <div class="node-icon">📄</div>
+                    <div class="node-title">Reference Summary</div>
+                    <div class="node-sub">Deterministic Template</div>
+                    <div class="node-tag">No Inference</div>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
+            <div class="flow-down-arrow">▼</div>
+
             <!-- Stage 3: Convergence & Response (Bottom) -->
+            <div class="flow-stage-header">
+              <span class="stage-num">STAGE 3</span>
+              <span class="stage-label">VERIFIED GROUND RECOVERY RESPONSE</span>
+            </div>
+            
             <div class="flow-row flow-row-bottom">
               <div class="pipeline-node node-response node-complete">
                 <div class="node-icon">✅</div>
-                <div class="node-title">Response Ready</div>
-                <div class="node-sub">4 Options &amp; Verified Citations</div>
+                <div class="node-title">Response Ready &amp; Evidence Bound</div>
+                <div class="node-sub">4 Verified Operational Options + Auditable Citations</div>
                 <div class="node-tag" id="pipePlanHashTag">SHA-256 Verified</div>
               </div>
             </div>
@@ -540,22 +631,16 @@
 
           <!-- Activity Log Section -->
           <div class="pipeline-activity-section">
-            <div class="activity-log-title">ACTIVITY LOG</div>
+            <div class="activity-log-title">LIVE EXECUTION AUDIT LOG</div>
             <div class="pipeline-log-terminal" id="pipelineActivityLog">
-              <div class="log-line"><span class="log-ts">18:28:10</span> <span class="log-ok">✓</span> <span class="log-comp">Telemetry Ingestion</span> <span class="log-dim">—</span> <span class="log-msg">Inbound flight AC-001 DXB➔FRA received</span></div>
-              <div class="log-line"><span class="log-ts">18:28:11</span> <span class="log-ok">✓</span> <span class="log-comp">Policy Gate</span> <span class="log-dim">—</span> <span class="log-msg">Planning status: ENABLED (Scope: GROUND_PREPARATION_ONLY)</span></div>
-              <div class="log-line"><span class="log-ts">18:28:12</span> <span class="log-ok">✓</span> <span class="log-comp">FTS5 Lexical Search</span> <span class="log-dim">—</span> <span class="log-msg">Matched 10 applicable documents (SIM-PROC-21-R3, SIM-MEL-21-R2, SIM-SOP-REC-R1)</span></div>
-              <div class="log-line"><span class="log-ts">18:28:13</span> <span class="log-ok">✓</span> <span class="log-comp">DB Query</span> <span class="log-dim">—</span> <span class="log-msg">Evaluated inventory across 6 stations; FRA quarantined (0 usable), AMS serviceable (1 usable)</span></div>
-              <div class="log-line"><span class="log-ts">18:28:14</span> <span class="log-ok">✓</span> <span class="log-comp">Staff &amp; Tool Validator</span> <span class="log-dim">—</span> <span class="log-msg">Selected qualified technician ENG-FRA-01 &amp; calibrated TOOL-FRA-01</span></div>
-              <div class="log-line"><span class="log-ts">18:28:15</span> <span class="log-ok">✓</span> <span class="log-comp">Recovery Formatter</span> <span class="log-dim">—</span> <span class="log-msg">Synthesized Option A (Inspect), B (MEL), C (Logistics), D (Swap Referral)</span></div>
-              <div class="log-line"><span class="log-ts">18:28:15</span> <span class="log-ok">✓</span> <span class="log-comp">Response Ready</span> <span class="log-dim">—</span> <span class="log-msg">Cryptographic plan hash generated; citations linked to evidence cards</span></div>
+              <div class="log-line"><span class="log-ts">--:--:--</span> <span class="log-ok">✓</span> <span class="log-comp">Pipeline Ready</span> <span class="log-dim">—</span> <span class="log-msg">Select scenario and click Prepare recovery plan to execute</span></div>
             </div>
           </div>
 
           <!-- Bottom Track Answer Banner -->
           <div class="pipeline-track-banner" id="pipelineStatusBanner">
             <span class="banner-bolt">⚡</span>
-            <span>Query was answered via the <strong>Dual-Track SQL (SQLite Database) + Lexical FTS5 Retrieval</strong> pipeline</span>
+            <span id="pipelineStatusBannerText">Pipeline running in <strong>With Inference (Live Local SLM)</strong> mode</span>
           </div>
         </div>
       </section>

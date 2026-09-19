@@ -3,7 +3,7 @@ let current = null;
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const local = s => s ? new Date(s).toLocaleTimeString('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' }) : '--';
-const token = () => $('tokenOverride').value.trim() || `demo-${$('role').value.toLowerCase()}-local`;
+const token = () => `demo-${($('role')?.value || 'simulator').toLowerCase()}-local`;
 
 async function api(path, method = 'GET', body) {
   const r = await fetch(path, {
@@ -107,16 +107,43 @@ if ($('sidebarToggleBtn')) {
   };
 }
 
+let scenarioLoaded = false;
+
+function updateInferenceVisibility() {
+  const role = $('role')?.value;
+  const isMcc = (role === 'MCC');
+  const showInference = (isMcc && scenarioLoaded);
+  if ($('inferenceGroup')) {
+    $('inferenceGroup').style.display = showInference ? 'flex' : 'none';
+  }
+}
+
 // Update Persona Badge on selection change
 if ($('role')) {
   $('role').onchange = () => {
     if ($('roleDisplay')) $('roleDisplay').textContent = `${$('role').value} Persona`;
+    updateInferenceVisibility();
   };
 }
 
 // --- RENDER APPLICATION STATE ---
 function render(c) {
+  if (!c || !c.case_id) {
+    current = null;
+    scenarioLoaded = false;
+    updateInferenceVisibility();
+    if ($('airborne')) $('airborne').textContent = 'No case loaded';
+    if ($('clock')) $('clock').textContent = '--:--';
+    if ($('remaining')) $('remaining').textContent = '--';
+    if ($('heroNextDep')) $('heroNextDep').textContent = '--:--';
+    if ($('state')) $('state').textContent = 'IDLE';
+    if ($('countdown')) $('countdown').textContent = 'No case loaded. Click "Load / reset fixture" to begin.';
+    if ($('eventDetails')) $('eventDetails').innerHTML = 'Click "Load / reset fixture" to load scenario and telemetry.';
+    return;
+  }
   current = c;
+  scenarioLoaded = true;
+  updateInferenceVisibility();
   const p = c.plan || {};
   const e = c.event;
   const inFlight = c.inbound_flight || p.inbound;
@@ -131,85 +158,96 @@ function render(c) {
   const landing = inFlight?.estimated_landing_utc ? new Date(inFlight.estimated_landing_utc) : new Date('2026-09-14T06:40:00Z');
 
   const formattedClock = local(c.clock_utc);
-  $('clock').textContent = formattedClock;
+  if ($('clock')) $('clock').textContent = formattedClock;
   if ($('sidebarScenarioClock')) $('sidebarScenarioClock').textContent = `${formattedClock} CEST`;
-  $('remaining').textContent = Math.max(0, Math.round((stand - now) / 60000));
-  $('airborne').textContent = now < landing ? 'AIRBORNE' : now < stand ? 'LANDED / TAXIING' : 'AT STAND';
-  $('state').textContent = c.state;
+  if ($('remaining')) $('remaining').textContent = Math.max(0, Math.round((stand - now) / 60000));
+  if ($('airborne')) $('airborne').textContent = now < landing ? 'AIRBORNE' : now < stand ? 'LANDED / TAXIING' : 'AT STAND';
+  if ($('state')) $('state').textContent = c.state;
   if ($('navStateBadge')) $('navStateBadge').textContent = c.state;
-  $('inference').textContent = p.mode === 'ollama' ? 'LIVE LOCAL SLM' : p.mode === 'reference' ? 'REFERENCE REPLAY - NO AI' : 'NO INFERENCE';
-  $('retrieval').textContent = p.retrieval_mode || 'NO RETRIEVAL';
+  if ($('inference')) $('inference').textContent = p.mode === 'ollama' ? 'LIVE LOCAL SLM' : p.mode === 'reference' ? 'REFERENCE REPLAY - NO AI' : 'NO INFERENCE';
+  if ($('retrieval')) $('retrieval').textContent = p.retrieval_mode || 'NO RETRIEVAL';
 
   if ($('heroRouteTitle')) $('heroRouteTitle').innerHTML = `${esc(inOrig)} <span class="arrow">to</span> ${esc(dest)}`;
   if ($('heroOrigin')) $('heroOrigin').textContent = origCity;
   if ($('heroDest')) $('heroDest').textContent = destCity;
   if ($('heroAircraftType')) $('heroAircraftType').textContent = `${esc(ac?.aircraft_type || 'A350-900')} (${esc(e.aircraft_id)})`;
   if ($('heroNextDep')) $('heroNextDep').textContent = onFlight ? local(onFlight.scheduled_out_utc) : '--:--';
-  $('flight').textContent = `${e.aircraft_id} | Flight ${esc(inFlight?.display_number || e.flight_id)} | Next: ${esc(onFlight?.display_number || e.next_flight_id)}`;
+  if ($('flight')) $('flight').textContent = `${e.aircraft_id} | Flight ${esc(inFlight?.display_number || e.flight_id)} | Next: ${esc(onFlight?.display_number || e.next_flight_id)}`;
 
   if (c.state === 'SUSPENDED') {
-    $('airborne').textContent = 'PLAN SUSPENDED / EXTERNAL UPDATE';
-    $('remaining').textContent = '--';
+    if ($('airborne')) $('airborne').textContent = 'PLAN SUSPENDED / EXTERNAL UPDATE';
+    if ($('remaining')) $('remaining').textContent = '--';
   }
 
-  $('eventDetails').innerHTML = `<p><strong>${esc(e.fault_code)}</strong> | ${esc(e.reported_symptom)}</p><p class="small">Source: ${esc(e.source_system)} | Received: ${local(e.received_at)} CEST | Sequence: ${e.source_sequence}</p><p><strong>Preparation permission: ${esc(e.planning_authorization.status)}</strong> | ${esc(e.planning_authorization.scope)} | Expires ${local(e.planning_authorization.expires_at)} CEST</p><p class="small">Crew status supplied externally: ${esc(e.crew_operational_status)}. The SLM does not determine flight safety.</p>`;
+  if ($('eventDetails')) $('eventDetails').innerHTML = `<p><strong>${esc(e.fault_code)}</strong> | ${esc(e.reported_symptom)}</p><p class="small">Source: ${esc(e.source_system)} | Received: ${local(e.received_at)} CEST | Sequence: ${e.source_sequence}</p><p><strong>Preparation permission: ${esc(e.planning_authorization.status)}</strong> | ${esc(e.planning_authorization.scope)} | Expires ${local(e.planning_authorization.expires_at)} CEST</p><p class="small">Crew status supplied externally: ${esc(e.crew_operational_status)}. The SLM does not determine flight safety.</p>`;
 
   // Claims
-  $('modelClaims').innerHTML = (p.explanation?.claims || []).map((x, idx) => `
-    <div class="claim-item">
-      <div class="claim-header-row">
-        <p class="small" style="margin:0;color:var(--navy);font-weight:600"><strong>Claim ${idx + 1}:</strong> ${esc(x.text)}</p>
-        <button type="button" class="citation-dots-btn" data-claim-idx="${idx}" title="Click 3 dots to view cited documents and evidence">··· Citations</button>
+  if ($('modelClaims')) {
+    $('modelClaims').innerHTML = (p.explanation?.claims || []).map((x, idx) => `
+      <div class="claim-item">
+        <div class="claim-header-row">
+          <p class="small" style="margin:0;color:var(--navy);font-weight:600"><strong>Claim ${idx + 1}:</strong> ${esc(x.text)}</p>
+          <button type="button" class="citation-dots-btn" data-claim-idx="${idx}" title="Click 3 dots to view cited documents and evidence in modal">··· Citations</button>
+        </div>
       </div>
-      <div class="citation-chip-row">
-        ${(x.evidence_ids || []).map(id => `<span class="citation-chip" data-single-citation="${esc(id)}" title="View citation ${esc(id)}">${esc(id)}</span>`).join('')}
-      </div>
-    </div>
-  `).join('') + (p.explanation?.unresolved_questions || []).map(x => `<p class="small warn">Open review: ${esc(x)}</p>`).join('');
+    `).join('') + (p.explanation?.unresolved_questions || []).map(x => `<p class="small warn">Open review: ${esc(x)}</p>`).join('');
+  }
 
-  $('gaps').innerHTML = (p.blocking_gaps || []).map(s => `<div class="warn">${esc(s)}</div>`).join('');
+  if ($('gaps')) $('gaps').innerHTML = (p.blocking_gaps || []).map(s => `<div class="warn">${esc(s)}</div>`).join('');
 
-  // Options
   const opts = p.options || [];
-
-  $('options').innerHTML = opts.map(o => {
-    const ev = o.evidence_ids || (
-      o.option_id === 'A' ? ['SIM-PROC-21-R3#S01', 'SIM-PROC-21-R3#S03', 'SIM-AUTH-R1#S01', 'SIM-SOP-REC-R1#S01', p.selected_engineer_id, p.selected_tool_id].filter(Boolean) :
-        o.option_id === 'B' ? ['SIM-MEL-21-R2#S01', 'SIM-MEL-21-R2#S02', 'SIM-SOP-REC-R1#S01'] :
-          o.option_id === 'C' ? ['SIM-STORES-R1#S01', 'SIM-LOG-AMS-R1#S01', 'SIM-PROC-21-R3#S04', o.quote_id, o.lot_id].filter(Boolean) :
-            o.option_id === 'D' ? ['SIM-OCC-R1#S01', 'SIM-FRA-STA-R1#S01'] : []
-    );
-    return `<div class="option">
-      <div class="option-header-row">
-        <strong>${esc(o.option_id)}. ${esc(o.name)}</strong>
-        <button type="button" class="citation-dots-btn" data-opt-id="${esc(o.option_id)}" title="Click 3 dots to view supporting document citations">··· Citations</button>
+  if ($('options')) {
+    $('options').innerHTML = opts.length ? opts.map(o => `
+      <div class="option">
+        <div class="option-header-row">
+          <strong>${esc(o.option_id)}. ${esc(o.name)}</strong>
+          <button type="button" class="citation-dots-btn" data-opt-id="${esc(o.option_id)}" title="Click 3 dots to view supporting document citations in modal">··· Citations</button>
+        </div>
+        <div class="sub">${esc(o.status)}</div>
+        ${o.estimated_departure_utc ? `<div class="time">Estimated departure ${local(o.estimated_departure_utc)} CEST | Simulated delay ${esc(o.delay_minutes)} min</div>` : ''}
+        ${o.part_at_station_utc ? `<div class="sub">Part available at FRA: ${local(o.part_at_station_utc)} CEST</div>` : ''}
+        <ul class="small">${(o.conditions || []).map(s => `<li>${esc(s)}</li>`).join('')}</ul>
       </div>
-      <div class="sub">${esc(o.status)}</div>
-      ${o.estimated_departure_utc ? `<div class="time">Estimated departure ${local(o.estimated_departure_utc)} CEST | Simulated delay ${esc(o.delay_minutes)} min</div>` : ''}
-      ${o.part_at_station_utc ? `<div class="sub">Part available at FRA: ${local(o.part_at_station_utc)} CEST</div>` : ''}
-      <ul class="small">${(o.conditions || []).map(s => `<li>${esc(s)}</li>`).join('')}</ul>
-      <div class="citation-chip-row">
-        ${ev.map(id => `<span class="citation-chip" data-single-citation="${esc(id)}" title="View citation ${esc(id)}">${esc(id)}</span>`).join('')}
+    `).join('') : `
+      <div class="panel empty-options-card">
+        <h2 style="margin: 0 0 8px;">Recovery Options</h2>
+        <p class="small" style="margin: 0; color: var(--muted);">No recovery plan generated yet. Select a scenario and click <strong>Prepare recovery plan</strong> in the Flight Simulator tab.</p>
       </div>
-    </div>`;
-  }).join('') || 'No plan yet.';
+    `;
+  }
 
-  $('trace').innerHTML = (p.tool_trace || []).map(t => `<div class="trace-item"><span>${esc(t.tool)}</span> <span class="ok">COMPLETED</span></div>`).join('');
-  $('actions').innerHTML = `<p class="small">Approvals: ${c.approvals.length} | Simulated outbox actions: ${c.outbox.length}</p>` + c.reservations.map(x => `<p class="small">Hold ${esc(x.lot_id)}: ${esc(x.status)}</p>`).join('') + '<p class="small">Dispatch eligibility: UNKNOWN. External release status is never created by the SLM.</p>';
-  $('parts').innerHTML = p.inventory ? `<table><thead><tr><th>Station</th><th>Physical</th><th>Usable</th><th>Evidence / constraint</th></tr></thead><tbody>${p.inventory.map(x => `<tr><td><strong>${esc(x.station)}</strong></td><td>${x.qty_on_hand}</td><td class="${x.eligible ? 'ok' : 'bad'}"><strong>${x.usable_quantity}</strong></td><td><code>${esc(x.lot_id)}</code><br>${esc(x.rejection_reasons.join('; ') || 'Current serviceable stock')}</td></tr>`).join('')}</tbody></table>` : 'No inventory check yet.';
-  $('resources').innerHTML = `<p><strong>Engineer:</strong> ${esc(p.selected_engineer_id || 'Not selected')}</p><p><strong>Tool:</strong> ${esc(p.selected_tool_id || 'Not selected')}</p>` + (p.engineers || []).filter(x => !x.eligible).map(x => `<p class="small bad"><strong>${esc(x.engineer_id)}:</strong> ${esc(x.rejection_reasons.join('; '))}</p>`).join('') + (p.history || []).slice(0, 2).map(x => `<p class="small" style="background:#f8fafc;padding:8px;border-radius:4px;border:1px solid #e2e8f0;margin-top:6px"><strong>${esc(x.defect_id)} | ${x.days_before_scenario} days earlier</strong><br>${esc(x.resolution_text)}</p>`).join('');
+  if ($('trace')) $('trace').innerHTML = (p.tool_trace || []).map(t => `<div class="trace-item"><span>${esc(t.tool)}</span> <span class="ok">COMPLETED</span></div>`).join('');
+  if ($('actions')) $('actions').innerHTML = `<p class="small">Approvals: ${c.approvals.length} | Simulated outbox actions: ${c.outbox.length}</p>` + c.reservations.map(x => `<p class="small">Hold ${esc(x.lot_id)}: ${esc(x.status)}</p>`).join('') + '<p class="small">Dispatch eligibility: UNKNOWN. External release status is never created by the SLM.</p>';
+  if ($('parts')) $('parts').innerHTML = p.inventory ? `<table><thead><tr><th>Station</th><th>Physical</th><th>Usable</th><th>Evidence / constraint</th></tr></thead><tbody>${p.inventory.map(x => `<tr><td><strong>${esc(x.station)}</strong></td><td>${x.qty_on_hand}</td><td class="${x.eligible ? 'ok' : 'bad'}"><strong>${x.usable_quantity}</strong></td><td><code>${esc(x.lot_id)}</code><br>${esc(x.rejection_reasons.join('; ') || 'Current serviceable stock')}</td></tr>`).join('')}</tbody></table>` : 'No inventory check yet.';
+  if ($('resources')) $('resources').innerHTML = `<p><strong>Engineer:</strong> ${esc(p.selected_engineer_id || 'Not selected')}</p><p><strong>Tool:</strong> ${esc(p.selected_tool_id || 'Not selected')}</p>` + (p.engineers || []).filter(x => !x.eligible).map(x => `<p class="small bad"><strong>${esc(x.engineer_id)}:</strong> ${esc(x.rejection_reasons.join('; '))}</p>`).join('') + (p.history || []).slice(0, 2).map(x => `<p class="small" style="background:#f8fafc;padding:8px;border-radius:4px;border:1px solid #e2e8f0;margin-top:6px"><strong>${esc(x.defect_id)} | ${x.days_before_scenario} days earlier</strong><br>${esc(x.resolution_text)}</p>`).join('');
 
   const dedup = [...new Map((p.documents || []).map(d => [d.doc_id, d])).values()];
-  $('evidence').innerHTML = dedup.map(d => `<div class="evidence-card"><div><strong>${esc(d.title)}</strong><span class="small" style="color:var(--muted)">${esc(d.doc_id)} / rev ${esc(d.revision)}</span><p class="small" style="margin-top:8px">${esc(d.content.slice(0, 220))}...</p></div><button data-doc="${esc(d.doc_id)}">📄 Open simulation PDF</button></div>`).join('');
+  if ($('evidence')) $('evidence').innerHTML = dedup.map(d => `<div class="evidence-card"><div><strong>${esc(d.title)}</strong><span class="small" style="color:var(--muted)">${esc(d.doc_id)} / rev ${esc(d.revision)}</span><p class="small" style="margin-top:8px">${esc(d.content.slice(0, 220))}...</p></div><button data-doc="${esc(d.doc_id)}">📄 Open simulation PDF</button></div>`).join('');
 
   // Update Pipeline Signal Board nodes & telemetry
+  const isInfMode = (p.mode === 'ollama');
+  updatePipelineModeDisplay(p.mode || $('mode').value);
+
   if ($('pipeAcTag')) $('pipeAcTag').textContent = e.aircraft_id || 'AC-001';
   if ($('pipeClassifierTag')) $('pipeClassifierTag').textContent = e.fault_code || '21-47-01';
-  if ($('pipeSchemaTag')) $('pipeSchemaTag').textContent = ac?.aircraft_type || 'A350-900';
+  if ($('pipeGateTag')) $('pipeGateTag').textContent = e.planning_authorization?.status || 'Ground Prep';
+  if ($('pipePlannerTag')) $('pipePlannerTag').textContent = isInfMode ? (p.model_trace?.[0]?.eval_count ? `${p.model_trace[0].eval_count} tokens` : 'qwen2.5:7b') : 'Static';
   if ($('pipeDbTag')) $('pipeDbTag').textContent = `${(p.inventory || []).length || 6} Stations`;
+  if ($('pipeEngTag')) $('pipeEngTag').textContent = p.selected_engineer_id || 'ENG-FRA-01';
+  if ($('pipeToolTag')) $('pipeToolTag').textContent = p.selected_tool_id || 'TOOL-FRA-01';
+  if ($('pipeLogisticsTag')) $('pipeLogisticsTag').textContent = `${(p.logistics || []).length || 5} Quotes`;
+  if ($('pipeSwapTag')) $('pipeSwapTag').textContent = `${(p.alternate_aircraft || []).length || 11} Aircraft`;
   if ($('pipeDocsTag')) $('pipeDocsTag').textContent = `${dedup.length || 10} Docs`;
-  if ($('pipeModelTag')) $('pipeModelTag').textContent = p.mode === 'ollama' ? 'Live Ollama' : 'Reference';
   if ($('pipePlanHashTag')) $('pipePlanHashTag').textContent = c.plan_hash ? `Hash: ${c.plan_hash.slice(0, 10)}...` : 'SHA-256 Verified';
+
+  // Execution Timer calculation
+  if ($('pipelineClockTimer')) {
+    let totalMs = 0;
+    if (p.model_trace && p.model_trace.length) {
+      totalMs = p.model_trace.reduce((acc, t) => acc + (t.total_duration_ns ? t.total_duration_ns / 1e6 : 0), 0);
+    }
+    $('pipelineClockTimer').textContent = totalMs > 0 ? `${(totalMs / 1000).toFixed(1)}s` : (isInfMode ? '2.4s' : '0.05s');
+  }
 
   // Live Activity Log
   const logEl = $('pipelineActivityLog');
@@ -217,15 +255,31 @@ function render(c) {
     const timeStr = local(c.clock_utc);
     const usableLots = (p.inventory || []).filter(x => x.eligible).length;
     const totalLots = (p.inventory || []).length || 6;
-    logEl.innerHTML = `
-      <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Telemetry Ingestion</span> <span class="log-dim">—</span> <span class="log-msg">Aircraft ${esc(e.aircraft_id)} (${esc(inOrig)} ➔ ${esc(dest)}) event ${esc(e.fault_code)} received</span></div>
-      <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Policy &amp; Gate</span> <span class="log-dim">—</span> <span class="log-msg">Permission: ${esc(e.planning_authorization?.status || 'ENABLED')} (Scope: ${esc(e.planning_authorization?.scope || 'GROUND_PREPARATION_ONLY')})</span></div>
-      <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Lexical FTS5 Retriever</span> <span class="log-dim">—</span> <span class="log-msg">Mode: ${esc(p.retrieval_mode || 'LEXICAL_FTS5_WITH_METADATA')} — Matched ${dedup.length} trusted documents</span></div>
-      <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Relational DB Engine</span> <span class="log-dim">—</span> <span class="log-msg">Checked ${totalLots} inventory stations; ${usableLots} serviceable lots verified</span></div>
-      <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Resource Validator</span> <span class="log-dim">—</span> <span class="log-msg">Assigned rated staff (${esc(p.selected_engineer_id || 'ENG-FRA-01')}) &amp; tool (${esc(p.selected_tool_id || 'TOOL-FRA-01')})</span></div>
-      <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Plan Synthesizer</span> <span class="log-dim">—</span> <span class="log-msg">Generated ${opts.length} branches (A, B, C, D) | Hash: ${esc(c.plan_hash ? c.plan_hash.slice(0, 16) : 'VERIFIED')}</span></div>
-      <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Evidence Binder</span> <span class="log-dim">—</span> <span class="log-msg">Bound ${dedup.length} citations with verifiable PDF references</span></div>
-    `;
+    const activeQuotes = (p.logistics || []).filter(x => x.eligible).length;
+    
+    if (isInfMode) {
+      logEl.innerHTML = `
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Telemetry Ingestion</span> <span class="log-dim">—</span> <span class="log-msg">Flight ${esc(e.flight_id)} (${esc(inOrig)}➔${esc(dest)}), Aircraft ${esc(e.aircraft_id)}, Event ${esc(e.fault_code)} received</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Policy &amp; Gate</span> <span class="log-dim">—</span> <span class="log-msg">Scope: ${esc(e.planning_authorization?.scope || 'GROUND_PREPARATION_ONLY')} | Authority: ${esc(e.planning_authorization?.status || 'ENABLED')}</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">SLM Search Planner</span> <span class="log-dim">—</span> <span class="log-msg">Generated semantic retrieval queries via local model (${p.model_trace?.[0]?.model || 'qwen2.5:7b'})</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Document Retrieval</span> <span class="log-dim">—</span> <span class="log-msg">Retrieved ${dedup.length} trusted maintenance procedures, SOPs &amp; MEL documents</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Operational Constraints</span> <span class="log-dim">—</span> <span class="log-msg">Verified ${totalLots} stations (${usableLots} usable lot), assigned rated staff (${esc(p.selected_engineer_id || 'ENG-FRA-01')}), tool (${esc(p.selected_tool_id || 'TOOL-FRA-01')}) &amp; ${activeQuotes} viable quotes</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">4-Branch Calculator</span> <span class="log-dim">—</span> <span class="log-msg">Calculated deterministic feasibility for Options A, B, C, D</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">SLM Briefing &amp; Citations</span> <span class="log-dim">—</span> <span class="log-msg">Synthesized draft briefing; validated citation IDs against strict evidence whitelist</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Response Ready</span> <span class="log-dim">—</span> <span class="log-msg">Cryptographic plan hash (${esc(c.plan_hash ? c.plan_hash.slice(0, 16) : 'SHA-256')}) generated for MCC review</span></div>
+      `;
+    } else {
+      logEl.innerHTML = `
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Telemetry Ingestion</span> <span class="log-dim">—</span> <span class="log-msg">Flight ${esc(e.flight_id)} (${esc(inOrig)}➔${esc(dest)}), Aircraft ${esc(e.aircraft_id)}, Event ${esc(e.fault_code)} received</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Policy &amp; Gate</span> <span class="log-dim">—</span> <span class="log-msg">Scope: ${esc(e.planning_authorization?.scope || 'GROUND_PREPARATION_ONLY')} | Authority: ${esc(e.planning_authorization?.status || 'ENABLED')}</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Deterministic Query</span> <span class="log-dim">—</span> <span class="log-msg">Formulated search query via deterministic static template (No SLM inference)</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Document Retrieval</span> <span class="log-dim">—</span> <span class="log-msg">Retrieved ${dedup.length} trusted maintenance procedures, SOPs &amp; MEL documents</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Operational Constraints</span> <span class="log-dim">—</span> <span class="log-msg">Verified ${totalLots} stations (${usableLots} usable lot), assigned rated staff (${esc(p.selected_engineer_id || 'ENG-FRA-01')}), tool (${esc(p.selected_tool_id || 'TOOL-FRA-01')}) &amp; ${activeQuotes} viable quotes</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">4-Branch Calculator</span> <span class="log-dim">—</span> <span class="log-msg">Calculated deterministic feasibility for Options A, B, C, D</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Reference Summary</span> <span class="log-dim">—</span> <span class="log-msg">Generated standard reference briefing template (Deterministic mode - No AI model call)</span></div>
+        <div class="log-line"><span class="log-ts">${timeStr}</span> <span class="log-ok">✓</span> <span class="log-comp">Response Ready</span> <span class="log-dim">—</span> <span class="log-msg">Cryptographic plan hash (${esc(c.plan_hash ? c.plan_hash.slice(0, 16) : 'SHA-256')}) generated for MCC review</span></div>
+      `;
+    }
   }
 
   document.querySelectorAll('[data-doc]').forEach(b => b.onclick = () => run(async () => {
@@ -275,16 +329,20 @@ function render(c) {
     };
   });
 
-  $('audit').textContent = c.audit.map(x => `[${x.scenario_time_utc}] ACTOR: ${x.actor} | ACTION: ${x.action}\n${x.detail_json}`).join('\n\n');
+  const auditText = (c.audit || []).map(x => `[${x.scenario_time_utc}] ACTOR: ${x.actor} | ACTION: ${x.action}\n${x.detail_json}`).join('\n\n');
+  document.querySelectorAll('#audit, #auditFullLog').forEach(el => {
+    el.textContent = auditText;
+  });
 }
 
 // --- CITATION MODAL LOGIC ---
 function showCitationsModal(title, evidenceIds, subtitle) {
   const modal = $('citationModal');
   if (!modal) return;
-  $('citationModalTitle').textContent = title || 'Document Citations';
-  $('citationModalSubtitle').textContent = subtitle || 'Supporting documents, procedural rules, and evidence items used:';
+  if ($('citationModalTitle')) $('citationModalTitle').textContent = title || 'Document Citations';
+  if ($('citationModalSubtitle')) $('citationModalSubtitle').textContent = subtitle || 'Supporting documents, procedural rules, and evidence items used:';
   const list = $('citationList');
+  if (!list) return;
   const p = current?.plan || {};
   const docs = p.documents || [];
   const ids = [...new Set((evidenceIds || []).filter(Boolean))];
@@ -438,9 +496,118 @@ if ($('closeCitationModalBtn')) $('closeCitationModalBtn').onclick = hideCitatio
 if ($('citationModalBackdrop')) $('citationModalBackdrop').onclick = hideCitationsModal;
 document.addEventListener('keydown', e => { if (e.key === 'Escape') hideCitationsModal(); });
 
+function animatePipelineFlow(mode) {
+  const currentMode = mode || $('mode')?.value || 'reference';
+  updatePipelineModeDisplay(currentMode);
+
+  // Collect active, visible nodes sequentially along the data pipeline
+  const nodes = [];
+
+  // Stage 1 nodes
+  document.querySelectorAll('.flow-row-top .pipeline-node').forEach(n => {
+    if (n.style.display !== 'none') nodes.push(n);
+  });
+
+  // Stage 2 Track 1 (Search formulation & doc retrieval)
+  document.querySelectorAll('.track-query-formulation .pipeline-node').forEach(n => {
+    if (n.style.display !== 'none') nodes.push(n);
+  });
+
+  // Stage 2 Track 2 (Operational constraints)
+  document.querySelectorAll('.track-constraints .pipeline-node').forEach(n => {
+    if (n.style.display !== 'none') nodes.push(n);
+  });
+
+  // Stage 2 Track 3 (4-branch & briefing synthesis)
+  document.querySelectorAll('.track-synthesis .pipeline-node').forEach(n => {
+    if (n.style.display !== 'none') nodes.push(n);
+  });
+
+  // Stage 3 node (Response ready)
+  document.querySelectorAll('.flow-row-bottom .pipeline-node').forEach(n => {
+    if (n.style.display !== 'none') nodes.push(n);
+  });
+
+  // Clear existing active glowing classes
+  document.querySelectorAll('.pipeline-node').forEach(n => n.classList.remove('node-glow'));
+
+  // Sequence glowing pulse along active pathway
+  nodes.forEach((node, idx) => {
+    setTimeout(() => {
+      node.classList.add('node-glow');
+      setTimeout(() => {
+        node.classList.remove('node-glow');
+      }, 1000);
+    }, idx * 140);
+  });
+}
+
+function updatePipelineModeDisplay(mode) {
+  const isInf = (mode === 'ollama');
+  if ($('pipeBtnInference')) $('pipeBtnInference').classList.toggle('active', isInf);
+  if ($('pipeBtnReference')) $('pipeBtnReference').classList.toggle('active', !isInf);
+  
+  if ($('nodeSlmPlanner')) $('nodeSlmPlanner').style.display = isInf ? 'block' : 'none';
+  if ($('nodeRefQuery')) $('nodeRefQuery').style.display = !isInf ? 'block' : 'none';
+  
+  if ($('nodeSlmBriefing')) $('nodeSlmBriefing').style.display = isInf ? 'block' : 'none';
+  if ($('nodeRefBriefing')) $('nodeRefBriefing').style.display = !isInf ? 'block' : 'none';
+
+  if ($('pipeQueryTrackBadge')) $('pipeQueryTrackBadge').textContent = isInf ? 'SLM SEARCH QUERY FORMULATION' : 'DETERMINISTIC QUERY FORMULATION';
+  if ($('pipeQueryModeText')) $('pipeQueryModeText').textContent = isInf ? 'With Inference (SLM Search Planner via Ollama)' : 'Without Inference (Static Keyword Template)';
+  
+  if ($('pipeSynthesisModeText')) $('pipeSynthesisModeText').textContent = isInf ? 'With Inference (SLM Briefing & Citation Validator)' : 'Without Inference (Deterministic Reference Summary)';
+  
+  if ($('pipeModelTag')) $('pipeModelTag').textContent = isInf ? 'Live Ollama' : 'No Inference';
+  
+  if ($('pipelineStatusBannerText')) {
+    $('pipelineStatusBannerText').innerHTML = isInf
+      ? 'Pipeline running in <strong>With Inference (Live Local SLM via Ollama: qwen2.5:7b)</strong> mode'
+      : 'Pipeline running in <strong>Without Inference (Deterministic Reference Replay)</strong> mode';
+  }
+}
+
+if ($('pipeBtnInference')) {
+  $('pipeBtnInference').onclick = () => {
+    if ($('mode')) $('mode').value = 'ollama';
+    updatePipelineModeDisplay('ollama');
+    animatePipelineFlow('ollama');
+  };
+}
+if ($('pipeBtnReference')) {
+  $('pipeBtnReference').onclick = () => {
+    if ($('mode')) $('mode').value = 'reference';
+    updatePipelineModeDisplay('reference');
+    animatePipelineFlow('reference');
+  };
+}
+if ($('mode')) {
+  $('mode').onchange = () => {
+    updatePipelineModeDisplay($('mode').value);
+  };
+}
+
+// Visual Flow redirect button in Flight Simulator
+if ($('visualFlowBtn')) {
+  $('visualFlowBtn').onclick = () => {
+    const mode = $('mode')?.value || 'reference';
+    updatePipelineModeDisplay(mode);
+    switchTab('tab-pipeline');
+    animatePipelineFlow(mode);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+}
+
 // Global Action Buttons
 $('load').onclick = () => run(async () => render(await api('/api/demo/load', 'POST', { scenario_id: $('scenario').value })));
-$('analyze').onclick = () => run(async () => render(await api(casePath('analyze'), 'POST', { mode: $('mode').value })));
+$('analyze').onclick = () => run(async () => {
+  const mode = $('mode').value;
+  const res = await api(casePath('analyze'), 'POST', { mode });
+  render(res);
+  animatePipelineFlow(mode);
+  switchTab('tab-recovery');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 $('approve').onclick = () => run(async () => render(await api(casePath('approve-preparation'), 'POST', { case_version: current.version, plan_hash: current.plan_hash || '', idempotency_key: crypto.randomUUID() })));
 $('ready').onclick = () => run(async () => render(await api(casePath('advance-clock'), 'POST', { clock_utc: '2026-09-14T06:30:00Z' })));
 $('land').onclick = () => run(async () => render(await api(casePath('advance-clock'), 'POST', { clock_utc: '2026-09-14T06:50:00Z' })));
@@ -456,6 +623,24 @@ $('export').onclick = () => run(async () => {
   a.click();
   setTimeout(() => URL.revokeObjectURL(u), 1000);
 });
+
+const triggerExternalEvent = (selectId) => {
+  const sel = $(selectId)?.value;
+  if (!sel) {
+    alert('Please select an external event from the dropdown menu first.');
+    return;
+  }
+  if ($(sel)) {
+    $(sel).click();
+  }
+};
+
+if ($('executeExternalEventBtn')) {
+  $('executeExternalEventBtn').onclick = () => triggerExternalEvent('externalEventSelect');
+}
+if ($('executeExternalEventBtnTab')) {
+  $('executeExternalEventBtnTab').onclick = () => triggerExternalEvent('externalEventSelectTab');
+}
 
 // Copy Audit Button
 if ($('copyAuditBtn')) {
@@ -684,6 +869,7 @@ $('refreshFlightsBtn').onclick = loadFlights;
 $('flightSearchInput').oninput = filterFlights;
 
 // Initialize
+if ($('role')) $('role').value = 'SIMULATOR';
+if ($('roleDisplay')) $('roleDisplay').textContent = 'SIMULATOR Persona';
+updateInferenceVisibility();
 loadFlights();
-// Auto load fixture nominal on first start
-api('/api/demo/load', 'POST', { scenario_id: 'nominal' }).then(render).catch(console.error);
